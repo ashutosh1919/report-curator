@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: ashutosh1919/report-curator
+        uses: ashutosh1919/report-curator@v0.1.0
         with:
           who-to-greet: 'Ashutosh Hathidara'
       # Use the output from the `hello` step
