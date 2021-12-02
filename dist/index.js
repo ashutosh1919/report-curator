@@ -20,10 +20,10 @@ exports.getCloners = exports.getViewers = void 0;
 const octokit_1 = __nccwpck_require__(7467);
 // import * as dotenv from 'dotenv';
 // dotenv.config();
-function getViewers(authToken) {
+function getViewers(authToken, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request("GET /repos/ashutosh1919/masterPortfolio/traffic/views");
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`);
     });
 }
 exports.getViewers = getViewers;
@@ -90,7 +90,7 @@ function curate() {
             const owner = payloadObj['repository']['owner']['name'];
             console.log(repository);
             console.log(owner);
-            (0, traffic_1.getViewers)(authToken)
+            (0, traffic_1.getViewers)(authToken, owner, repository)
                 .then(res => JSON.stringify(res))
                 .then(res => console.log(res))
                 .catch(error => core.setFailed(JSON.stringify(error)));

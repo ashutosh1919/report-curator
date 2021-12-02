@@ -22,7 +22,7 @@ async function curate(){
         console.log(repository);
         console.log(owner);
         
-        getViewers(authToken)
+        getViewers(authToken, owner, repository)
           .then(res => JSON.stringify(res))
           .then(res => console.log(res))
           .catch(error => core.setFailed(JSON.stringify(error)))
