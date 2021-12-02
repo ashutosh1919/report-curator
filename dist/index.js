@@ -98,7 +98,7 @@ function curate() {
     });
 }
 // getViewers().then(res => console.log(JSON.stringify(res)));
-// curate();
+curate();
 
 
 /***/ }),
