@@ -82,6 +82,7 @@ function curate() {
             const nameToGreet = core.getInput('who-to-greet');
             console.log(`Hello ${nameToGreet}!`);
             const authToken = core.getInput('auth_token');
+            console.log(authToken);
             (0, traffic_1.getViewers)(authToken)
                 .then(res => JSON.stringify(res))
                 .then(res => console.log(res))
