@@ -10,7 +10,7 @@ const v3Headers = {
 
 export async function getViewers(authToken: string, owner: string, repository: string): Promise<any> {
     const octokit = new Octokit({ auth: authToken });
-    return await octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
+    return await octokit.request(`GET /repos/${owner}/ashutosh1919/traffic/views`, {
         header: JSON.stringify(v3Headers)
     });
 }
