@@ -10,7 +10,17 @@ async function curate(){
         const nameToGreet: string = core.getInput('who-to-greet');
         console.log(`Hello ${nameToGreet}!`);
         const authToken: string = core.getInput('auth_token');
-        console.log(authToken);
+
+        // Get the JSON webhook payload for the event that triggered the workflow
+        const payload: string = JSON.stringify(github.context.payload, undefined, 2)
+        const payloadObj: Object = JSON.parse(payload);
+        // console.log(`The event payload: ${payload}`);
+
+        const repository: string = payloadObj['repository']['name'];
+        const owner: string = payloadObj['repository']['owner']['name'];
+
+        console.log(repository);
+        console.log(owner);
         
         getViewers(authToken)
           .then(res => JSON.stringify(res))
@@ -19,9 +29,6 @@ async function curate(){
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
-        // Get the JSON webhook payload for the event that triggered the workflow
-        const payload = JSON.stringify(github.context.payload, undefined, 2)
-        console.log(`The event payload: ${payload}`);
       } catch (error: any) {
         core.setFailed(error.message);
       }

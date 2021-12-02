@@ -82,16 +82,20 @@ function curate() {
             const nameToGreet = core.getInput('who-to-greet');
             console.log(`Hello ${nameToGreet}!`);
             const authToken = core.getInput('auth_token');
-            console.log(authToken);
+            // Get the JSON webhook payload for the event that triggered the workflow
+            const payload = JSON.stringify(github.context.payload, undefined, 2);
+            const payloadObj = JSON.parse(payload);
+            // console.log(`The event payload: ${payload}`);
+            const repository = payloadObj['repository']['name'];
+            const owner = payloadObj['repository']['owner']['name'];
+            console.log(repository);
+            console.log(owner);
             (0, traffic_1.getViewers)(authToken)
                 .then(res => JSON.stringify(res))
                 .then(res => console.log(res))
                 .catch(error => core.setFailed(JSON.stringify(error)));
             const time = (new Date()).toTimeString();
             core.setOutput("time", time);
-            // Get the JSON webhook payload for the event that triggered the workflow
-            const payload = JSON.stringify(github.context.payload, undefined, 2);
-            console.log(`The event payload: ${payload}`);
         }
         catch (error) {
             core.setFailed(error.message);
