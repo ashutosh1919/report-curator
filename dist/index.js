@@ -28,7 +28,7 @@ function getViewers(authToken, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new octokit_1.Octokit({ auth: authToken });
         return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
-            headers: v3Headers
+            header: v3Headers
         });
     });
 }
