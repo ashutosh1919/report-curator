@@ -84,7 +84,7 @@ function curate() {
             const authToken = core.getInput('auth_token');
             (0, traffic_1.getViewers)(authToken)
                 .then(res => JSON.stringify(res))
-                .then(res => core.setOutput("Viewers", res))
+                .then(res => console.log(res))
                 .catch(error => core.setFailed(JSON.stringify(error)));
             const time = (new Date()).toTimeString();
             core.setOutput("time", time);

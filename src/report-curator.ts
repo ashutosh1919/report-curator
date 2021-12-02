@@ -13,7 +13,7 @@ async function curate(){
         
         getViewers(authToken)
           .then(res => JSON.stringify(res))
-          .then(res => core.setOutput("Viewers", res))
+          .then(res => console.log(res))
           .catch(error => core.setFailed(JSON.stringify(error)))
 
         const time = (new Date()).toTimeString();
