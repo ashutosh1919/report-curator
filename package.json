@@ -1,6 +1,6 @@
 {
   "name": "report-curator",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "Under Construction",
   "main": "lib/report-curator.js",
   "scripts": {
@@ -20,11 +20,15 @@
   "dependencies": {
     "@actions/core": "^1.5.0",
     "@actions/exec": "^1.1.0",
-    "@actions/github": "^5.0.0"
+    "@actions/github": "^5.0.0",
+    "graphql": "^16.0.1"
   },
   "devDependencies": {
+    "@octokit/request": "github:octokit/request",
+    "@types/node": "^14.17.6",
     "@vercel/ncc": "^0.31.1",
-    "typescript": "^4.4.3",
-    "@types/node": "^14.17.6"
+    "dotenv": "^10.0.0",
+    "octokit": "^1.7.1",
+    "typescript": "^4.4.3"
   }
 }

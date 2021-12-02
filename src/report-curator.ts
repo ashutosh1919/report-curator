@@ -2,11 +2,20 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
+import { getViewers, getCloners } from './helpers/traffic';
+
 async function curate(){
     try {
         // `who-to-greet` input defined in action metadata file
-        const nameToGreet = core.getInput('who-to-greet');
+        const nameToGreet: string = core.getInput('who-to-greet');
         console.log(`Hello ${nameToGreet}!`);
+        const authToken: string = core.getInput('auth_token');
+        
+        getViewers(authToken)
+          .then(res => JSON.stringify(res))
+          .then(res => console.log(res))
+          .catch(error => core.setFailed(JSON.stringify(error)))
+
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
         // Get the JSON webhook payload for the event that triggered the workflow
@@ -18,4 +27,6 @@ async function curate(){
       
 }
 
-curate();
+// getViewers().then(res => console.log(JSON.stringify(res)));
+
+// curate();
