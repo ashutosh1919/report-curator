@@ -3,9 +3,16 @@ import { Octokit } from "octokit";
 
 // dotenv.config();
 
+const v3Headers = {
+    "access-control-allow-origin": "*",
+    "accept": "application/vnd.github.v3+json"
+}
+
 export async function getViewers(authToken: string, owner: string, repository: string): Promise<any> {
     const octokit = new Octokit({ auth: authToken });
-    return await octokit.request(`GET /repos/${owner}/${repository}/traffic/views`);
+    return await octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
+        headers: v3Headers
+    });
 }
 
 export async function getCloners(authToken: string): Promise<any> {

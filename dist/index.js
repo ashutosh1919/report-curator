@@ -20,10 +20,16 @@ exports.getCloners = exports.getViewers = void 0;
 const octokit_1 = __nccwpck_require__(7467);
 // import * as dotenv from 'dotenv';
 // dotenv.config();
+const v3Headers = {
+    "access-control-allow-origin": "*",
+    "accept": "application/vnd.github.v3+json"
+};
 function getViewers(authToken, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`);
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
+            headers: v3Headers
+        });
     });
 }
 exports.getViewers = getViewers;
