@@ -10,6 +10,7 @@ async function curate(){
         const nameToGreet: string = core.getInput('who-to-greet');
         console.log(`Hello ${nameToGreet}!`);
         const authToken: string = core.getInput('auth_token');
+        console.log(authToken);
         
         getViewers(authToken)
           .then(res => JSON.stringify(res))
