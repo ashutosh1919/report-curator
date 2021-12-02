@@ -27,16 +27,18 @@ const v3Headers = {
 function getViewers(authToken, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request(`GET /repos/${owner}/masterPortfolio/traffic/views`, {
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
             header: JSON.stringify(v3Headers)
         });
     });
 }
 exports.getViewers = getViewers;
-function getCloners(authToken) {
+function getCloners(authToken, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request("GET /repos/ashutosh1919/masterPortfolio/traffic/clones");
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/clones`, {
+            header: JSON.stringify(v3Headers)
+        });
     });
 }
 exports.getCloners = getCloners;
@@ -92,11 +94,15 @@ function curate() {
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             const payloadObj = JSON.parse(payload);
             // console.log(`The event payload: ${payload}`);
-            const repository = payloadObj['repository']['name'];
+            const repository = "masterPortfolio"; // payloadObj['repository']['name'];
             const owner = payloadObj['repository']['owner']['name'];
             console.log(repository);
             console.log(owner);
             (0, traffic_1.getViewers)(authToken, owner, repository)
+                .then(res => JSON.stringify(res))
+                .then(res => console.log(res))
+                .catch(error => core.setFailed(JSON.stringify(error)));
+            (0, traffic_1.getCloners)(authToken, owner, repository)
                 .then(res => JSON.stringify(res))
                 .then(res => console.log(res))
                 .catch(error => core.setFailed(JSON.stringify(error)));

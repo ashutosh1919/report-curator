@@ -16,7 +16,7 @@ async function curate(){
         const payloadObj: Object = JSON.parse(payload);
         // console.log(`The event payload: ${payload}`);
 
-        const repository: string = payloadObj['repository']['name'];
+        const repository: string = "masterPortfolio";  // payloadObj['repository']['name'];
         const owner: string = payloadObj['repository']['owner']['name'];
 
         console.log(repository);
@@ -25,7 +25,12 @@ async function curate(){
         getViewers(authToken, owner, repository)
           .then(res => JSON.stringify(res))
           .then(res => console.log(res))
-          .catch(error => core.setFailed(JSON.stringify(error)))
+          .catch(error => core.setFailed(JSON.stringify(error)));
+        
+        getCloners(authToken, owner, repository)
+          .then(res => JSON.stringify(res))
+          .then(res => console.log(res))
+          .catch(error => core.setFailed(JSON.stringify(error)));
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
