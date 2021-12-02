@@ -1,6 +1,10 @@
 name: 'report-curator'
 description: 'Under construction'
 inputs:
+  auth_token:
+    description: "Access token to get the data about the repository."
+    required: true
+    default: ''
   who-to-greet:  # id of input
     description: 'Who to greet'
     required: true
