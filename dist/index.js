@@ -190,8 +190,8 @@ function curate() {
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             const payloadObj = JSON.parse(payload);
-            // console.log(`The event payload: ${payload}`);
-            const repository = "masterPortfolio"; // payloadObj['repository']['name'];
+            console.log(`The event payload: ${payload}`);
+            const repository = payloadObj['repository']['name'];
             const owner = payloadObj['repository']['owner']['name'];
             console.log(repository);
             console.log(owner);

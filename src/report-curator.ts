@@ -14,16 +14,16 @@ async function curate(){
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
-        const payloadObj: object = JSON.parse(payload);
-        // console.log(`The event payload: ${payload}`);
+        const payloadObj: any = JSON.parse(payload);
+        console.log(`The event payload: ${payload}`);
 
-        const repository: string = "masterPortfolio";  // payloadObj['repository']['name'];
+        const repository: string = payloadObj['repository']['name'];
         const owner: string = payloadObj['repository']['owner']['name'];
 
         console.log(repository);
         console.log(owner);
 
-        let config: object = await getActionSecrets(authToken, payloadObj);
+        let config: any = await getActionSecrets(authToken, payloadObj);
 
         console.log(JSON.stringify(config));
         
