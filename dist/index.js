@@ -27,13 +27,7 @@ function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
 }
 exports.getGitResponseV3 = getGitResponseV3;
 function getBranchRefV3(octokit, owner, repository, branch) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.git.getRef({
-            owner,
-            repository,
-            ref: `heads/${branch}`,
-        });
-    });
+    return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
 exports.getBranchRefV3 = getBranchRefV3;
 
@@ -124,7 +118,7 @@ function getActionSecrets(authToken, payload) {
         let owner = repOps.getRepositoryOwner(payload);
         let repository = repOps.getRepositoryName(payload);
         let branch = repOps.getCurrentBranchName(payload);
-        let octokit = getOctokitContext(authToken);
+        let octokit = yield getOctokitContext(authToken);
         let baseSHA = yield apiOps.getBranchRefV3(octokit, owner, repository, branch);
         console.log("Base SHA");
         console.log(baseSHA);

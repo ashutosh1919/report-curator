@@ -10,7 +10,7 @@ export async function getActionSecrets(authToken: string, payload: object): Prom
     let owner: string = repOps.getRepositoryOwner(payload);
     let repository: string = repOps.getRepositoryName(payload);
     let branch: string = repOps.getCurrentBranchName(payload);
-    let octokit: any = getOctokitContext(authToken);
+    let octokit: any = await getOctokitContext(authToken);
     let baseSHA: any = await apiOps.getBranchRefV3(octokit, owner, repository, branch);
     console.log("Base SHA");
     console.log(baseSHA);

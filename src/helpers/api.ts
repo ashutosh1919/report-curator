@@ -6,13 +6,11 @@ export async function getGitResponseV3(octokit: any, url: string, headers: objec
     });
 }
 
-export async function getBranchRefV3(octokit: any,
+export function getBranchRefV3(
+        octokit: any,
         owner: string,
         repository: string,
         branch: string): Promise<any> {
-    return await octokit.git.getRef({
-        owner,
-        repository,
-        ref: `heads/${branch}`,
-    });
+    return getGitResponseV3(octokit,
+        `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
