@@ -67,7 +67,7 @@ function getCurrentBranchName(payload) {
 }
 exports.getCurrentBranchName = getCurrentBranchName;
 function getRepositoryOwner(payload) {
-    return payload["repsitory"]["owner"]["name"];
+    return payload["repository"]["owner"]["name"];
 }
 exports.getRepositoryOwner = getRepositoryOwner;
 function getRepositoryName(payload) {
