@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9216:
+/***/ 1035:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -16,32 +16,128 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getCloners = exports.getViewers = void 0;
-const octokit_1 = __nccwpck_require__(7467);
-// import * as dotenv from 'dotenv';
-// dotenv.config();
-const v3Headers = {
+exports.getBranchRefV3 = exports.getGitResponseV3 = void 0;
+const constants_1 = __nccwpck_require__(1439);
+function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(url, {
+            header: JSON.stringify(headers)
+        });
+    });
+}
+exports.getGitResponseV3 = getGitResponseV3;
+function getBranchRefV3(octokit, owner, repository, branch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.git.getRef({
+            owner,
+            repository,
+            ref: `heads/${branch}`,
+        });
+    });
+}
+exports.getBranchRefV3 = getBranchRefV3;
+
+
+/***/ }),
+
+/***/ 1439:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.v3Headers = void 0;
+exports.v3Headers = {
     "access-control-allow-origin": "*",
     "accept": "application/vnd.github.v3+json"
 };
-function getViewers(authToken, owner, repository) {
+
+
+/***/ }),
+
+/***/ 3642:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = void 0;
+function getCurrentBranchName(payload) {
+    return payload["repository"]["default_branch"];
+}
+exports.getCurrentBranchName = getCurrentBranchName;
+function getRepositoryOwner(payload) {
+    return payload["repsitory"]["owner"]["name"];
+}
+exports.getRepositoryOwner = getRepositoryOwner;
+function getRepositoryName(payload) {
+    return payload["repository"]["name"];
+}
+exports.getRepositoryName = getRepositoryName;
+
+
+/***/ }),
+
+/***/ 5157:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getActionSecrets = void 0;
+const octokit_1 = __nccwpck_require__(7467);
+const repOps = __importStar(__nccwpck_require__(3642));
+const apiOps = __importStar(__nccwpck_require__(1035));
+function getOctokitContext(authToken) {
+    return new octokit_1.Octokit({ auth: authToken });
+}
+function getActionSecrets(authToken, payload) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`, {
-            header: JSON.stringify(v3Headers)
-        });
+        let owner = repOps.getRepositoryOwner(payload);
+        let repository = repOps.getRepositoryName(payload);
+        let branch = repOps.getCurrentBranchName(payload);
+        let octokit = getOctokitContext(authToken);
+        let baseSHA = yield apiOps.getBranchRefV3(octokit, owner, repository, branch);
+        console.log("Base SHA");
+        console.log(baseSHA);
+        return {
+            octokit: octokit,
+            owner: owner,
+            repository: repository,
+            branch: branch,
+            baseSHA: baseSHA
+        };
     });
 }
-exports.getViewers = getViewers;
-function getCloners(authToken, owner, repository) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const octokit = new octokit_1.Octokit({ auth: authToken });
-        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/clones`, {
-            header: JSON.stringify(v3Headers)
-        });
-    });
-}
-exports.getCloners = getCloners;
+exports.getActionSecrets = getActionSecrets;
 
 
 /***/ }),
@@ -82,7 +178,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const traffic_1 = __nccwpck_require__(9216);
+const secrets_1 = __nccwpck_require__(5157);
+// import { getViewers, getCloners } from './helpers/traffic';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -98,14 +195,16 @@ function curate() {
             const owner = payloadObj['repository']['owner']['name'];
             console.log(repository);
             console.log(owner);
-            (0, traffic_1.getViewers)(authToken, owner, repository)
-                .then(res => JSON.stringify(res))
-                .then(res => console.log(res))
-                .catch(error => core.setFailed(JSON.stringify(error)));
-            (0, traffic_1.getCloners)(authToken, owner, repository)
-                .then(res => JSON.stringify(res))
-                .then(res => console.log(res))
-                .catch(error => core.setFailed(JSON.stringify(error)));
+            let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+            console.log(JSON.stringify(config));
+            // getViewers(authToken, owner, repository)
+            //   .then(res => JSON.stringify(res))
+            //   .then(res => console.log(res))
+            //   .catch(error => core.setFailed(JSON.stringify(error)));
+            // getCloners(authToken, owner, repository)
+            //   .then(res => JSON.stringify(res))
+            //   .then(res => console.log(res))
+            //   .catch(error => core.setFailed(JSON.stringify(error)));
             const time = (new Date()).toTimeString();
             core.setOutput("time", time);
         }

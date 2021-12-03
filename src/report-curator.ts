@@ -2,7 +2,8 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
-import { getViewers, getCloners } from './helpers/traffic';
+import { getActionSecrets } from './helpers/secrets';
+// import { getViewers, getCloners } from './helpers/traffic';
 
 async function curate(){
     try {
@@ -13,7 +14,7 @@ async function curate(){
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
-        const payloadObj: Object = JSON.parse(payload);
+        const payloadObj: object = JSON.parse(payload);
         // console.log(`The event payload: ${payload}`);
 
         const repository: string = "masterPortfolio";  // payloadObj['repository']['name'];
@@ -21,16 +22,20 @@ async function curate(){
 
         console.log(repository);
         console.log(owner);
+
+        let config: object = await getActionSecrets(authToken, payloadObj);
+
+        console.log(JSON.stringify(config));
         
-        getViewers(authToken, owner, repository)
-          .then(res => JSON.stringify(res))
-          .then(res => console.log(res))
-          .catch(error => core.setFailed(JSON.stringify(error)));
+        // getViewers(authToken, owner, repository)
+        //   .then(res => JSON.stringify(res))
+        //   .then(res => console.log(res))
+        //   .catch(error => core.setFailed(JSON.stringify(error)));
         
-        getCloners(authToken, owner, repository)
-          .then(res => JSON.stringify(res))
-          .then(res => console.log(res))
-          .catch(error => core.setFailed(JSON.stringify(error)));
+        // getCloners(authToken, owner, repository)
+        //   .then(res => JSON.stringify(res))
+        //   .then(res => console.log(res))
+        //   .catch(error => core.setFailed(JSON.stringify(error)));
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);

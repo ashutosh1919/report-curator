@@ -1,12 +1,5 @@
 import { Octokit } from "octokit";
-// import * as dotenv from 'dotenv';
-
-// dotenv.config();
-
-const v3Headers = {
-    "access-control-allow-origin": "*",
-    "accept": "application/vnd.github.v3+json"
-}
+import { v3Headers } from './constants';
 
 export async function getViewers(authToken: string, owner: string, repository: string): Promise<any> {
     const octokit = new Octokit({ auth: authToken });
