@@ -22,3 +22,19 @@ export function getBranchRefV3(
     return getGitResponseV3(octokit,
         `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
+
+export async function createBranchRefV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        refBranch: string,
+        baseSHA: string
+        ): Promise<any> {
+    return await octokit.request(
+        `POST /repos/${owner}/${repository}/git/refs`,
+        {
+            ref: refBranch,
+            sha: baseSHA
+        }
+    );
+}

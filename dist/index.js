@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -34,6 +34,15 @@ function getBranchRefV3(octokit, owner, repository, branch) {
     return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
 exports.getBranchRefV3 = getBranchRefV3;
+function createBranchRefV3(octokit, owner, repository, refBranch, baseSHA) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`POST /repos/${owner}/${repository}/git/refs`, {
+            ref: refBranch,
+            sha: baseSHA
+        });
+    });
+}
+exports.createBranchRefV3 = createBranchRefV3;
 
 
 /***/ }),
@@ -59,7 +68,11 @@ exports.v3Headers = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isBranchExists = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = void 0;
+exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
+function cloneJSON(jsonObj) {
+    return JSON.parse(JSON.stringify(jsonObj));
+}
+exports.cloneJSON = cloneJSON;
 function getCurrentBranchName(payload) {
     return payload["repository"]["default_branch"];
 }
@@ -72,10 +85,15 @@ function getRepositoryName(payload) {
     return payload["repository"]["name"];
 }
 exports.getRepositoryName = getRepositoryName;
-function isBranchExists(config, branch) {
-    return true;
+function getBranchConfig(branchConfig, branch) {
+    for (let i = 0; i < branchConfig.length; i++) {
+        if (branchConfig[i]["name"] === branch) {
+            return cloneJSON(branchConfig[i]);
+        }
+    }
+    return {};
 }
-exports.isBranchExists = isBranchExists;
+exports.getBranchConfig = getBranchConfig;
 
 
 /***/ }),
@@ -179,6 +197,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const secrets_1 = __nccwpck_require__(5157);
+const repOps = __importStar(__nccwpck_require__(3642));
+const apiOps = __importStar(__nccwpck_require__(1035));
 // import { getViewers, getCloners } from './helpers/traffic';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -197,7 +217,13 @@ function curate() {
             // console.log(repository);
             // console.log(owner);
             let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            console.log(JSON.stringify(config.branches));
+            let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
+            let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+            if (Object.keys(reportBranchConfig).length === 0) {
+                let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
+                console.log(res);
+            }
+            // console.log(JSON.stringify(config.branches));
             // getViewers(authToken, owner, repository)
             //   .then(res => JSON.stringify(res))
             //   .then(res => console.log(res))

@@ -1,4 +1,8 @@
 
+export function cloneJSON(jsonObj: any): any {
+    return JSON.parse(JSON.stringify(jsonObj));
+}
+
 export function getCurrentBranchName(payload: any): string {
     return payload["repository"]["default_branch"];
 }
@@ -11,6 +15,11 @@ export function getRepositoryName(payload: any): string {
     return payload["repository"]["name"];
 }
 
-export function isBranchExists(config: any, branch: string): boolean {
-    return true;
+export function getBranchConfig(branchConfig: any, branch: string): any {
+    for(let i = 0; i < branchConfig.length; i++) {
+        if(branchConfig[i]["name"] === branch) {
+            return cloneJSON(branchConfig[i]);
+        }
+    }
+    return {};
 }
