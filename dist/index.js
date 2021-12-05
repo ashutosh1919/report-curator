@@ -133,7 +133,7 @@ function getActionSecrets(authToken, payload) {
             owner: owner,
             repository: repository,
             branch: branch,
-            branches: branches
+            branches: branches["data"]
         };
     });
 }

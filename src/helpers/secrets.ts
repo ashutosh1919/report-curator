@@ -17,6 +17,6 @@ export async function getActionSecrets(authToken: string, payload: object): Prom
         owner: owner,
         repository: repository,
         branch: branch,
-        branches: branches
+        branches: branches["data"]
     };
 }
