@@ -37,7 +37,7 @@ exports.getBranchRefV3 = getBranchRefV3;
 function createBranchRefV3(octokit, owner, repository, refBranch, baseSHA) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/${owner}/${repository}/git/refs`, {
-            ref: `ref/heads/${refBranch}`,
+            ref: `refs/heads/${refBranch}`,
             sha: baseSHA
         });
     });
