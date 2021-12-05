@@ -38,3 +38,18 @@ export async function createBranchRefV3(
         }
     );
 }
+
+export async function createFileBlobV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        content: string,
+        encoding: string = 'utf8'): Promise<any> {
+    return await octokit.request(
+        `POST /repos/${owner}/${repository}/git/blobs`,
+        {
+            content: content,
+            encoding: encoding
+        }
+    )
+}

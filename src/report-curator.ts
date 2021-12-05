@@ -34,14 +34,31 @@ async function curate(){
             config.branches,
             reportBranch);
         if(Object.keys(reportBranchConfig).length === 0){
-            let res = await apiOps.createBranchRefV3(
-                config.octokit,
-                owner,
-                repository,
-                reportBranch,
-                defaultBranchConfig["commit"]["sha"]);
-            console.log(res);
+              let res: any = await apiOps.createBranchRefV3(
+                  config.octokit,
+                  owner,
+                  repository,
+                  reportBranch,
+                  defaultBranchConfig["commit"]["sha"]);
+              config = await getActionSecrets(authToken, payloadObj);
+              reportBranchConfig = await repOps.getBranchConfig(
+                  config.branches,
+                  reportBranch);
         }
+
+        let templateContent: string = repOps.pushTemplateBlobContent(
+            config.octokit,
+            owner,
+            repository
+        );
+        let blobResponse: any = await apiOps.createFileBlobV3(
+            config.octokit,
+            owner,
+            repository,
+            templateContent
+        );
+
+        console.log(blobResponse);
 
         // console.log(JSON.stringify(config.branches));
         
