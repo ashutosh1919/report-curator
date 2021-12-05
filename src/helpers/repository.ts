@@ -26,7 +26,7 @@ export function getBranchConfig(branchConfig: any, branch: string): any {
 }
 
 export function getReportTemplateContent(): string {
-    return fs.readFileSync('./templates/index.html', 'utf8').toString();
+    return fs.readFileSync('../templates/index.html', 'utf8').toString();
 }
 
 export function pushTemplateBlobContent(

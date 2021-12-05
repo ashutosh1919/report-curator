@@ -124,7 +124,7 @@ function getBranchConfig(branchConfig, branch) {
 }
 exports.getBranchConfig = getBranchConfig;
 function getReportTemplateContent() {
-    return fs.readFileSync('./templates/index.html', 'utf8').toString();
+    return fs.readFileSync('../templates/index.html', 'utf8').toString();
 }
 exports.getReportTemplateContent = getReportTemplateContent;
 function pushTemplateBlobContent(octokit, owner, repository) {
