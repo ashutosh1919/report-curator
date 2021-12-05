@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 
 export function cloneJSON(jsonObj: any): any {
     return JSON.parse(JSON.stringify(jsonObj));
@@ -25,13 +24,9 @@ export function getBranchConfig(branchConfig: any, branch: string): any {
     return {};
 }
 
-export function getReportTemplateContent(): string {
-    return fs.readFileSync('../templates/index.html', 'utf8').toString();
-}
-
-export function pushTemplateBlobContent(
-        octokit: any,
-        owner: string,
-        repository: string): string {
-    return getReportTemplateContent();
-}
+// export function pushTemplateBlobContent(
+//         octokit: any,
+//         owner: string,
+//         repository: string): string {
+//     return getReportTemplateContent();
+// }

@@ -72,32 +72,12 @@ exports.v3Headers = {
 /***/ }),
 
 /***/ 3642:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.pushTemplateBlobContent = exports.getReportTemplateContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
-const fs = __importStar(__nccwpck_require__(5747));
+exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -123,14 +103,12 @@ function getBranchConfig(branchConfig, branch) {
     return {};
 }
 exports.getBranchConfig = getBranchConfig;
-function getReportTemplateContent() {
-    return fs.readFileSync('../templates/index.html', 'utf8').toString();
-}
-exports.getReportTemplateContent = getReportTemplateContent;
-function pushTemplateBlobContent(octokit, owner, repository) {
-    return getReportTemplateContent();
-}
-exports.pushTemplateBlobContent = pushTemplateBlobContent;
+// export function pushTemplateBlobContent(
+//         octokit: any,
+//         owner: string,
+//         repository: string): string {
+//     return getReportTemplateContent();
+// }
 
 
 /***/ }),
@@ -233,10 +211,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+const fs = __importStar(__nccwpck_require__(5747));
 const secrets_1 = __nccwpck_require__(5157);
 const repOps = __importStar(__nccwpck_require__(3642));
 const apiOps = __importStar(__nccwpck_require__(1035));
 // import { getViewers, getCloners } from './helpers/traffic';
+function getReportTemplateContent() {
+    return fs.readFileSync('templates/index.html', 'utf8').toString();
+}
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -261,7 +243,12 @@ function curate() {
                 config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
                 reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             }
-            let templateContent = repOps.pushTemplateBlobContent(config.octokit, owner, repository);
+            let templateContent = getReportTemplateContent();
+            // let templateContent: string = repOps.pushTemplateBlobContent(
+            //     config.octokit,
+            //     owner,
+            //     repository
+            // );
             let blobResponse = yield apiOps.createFileBlobV3(config.octokit, owner, repository, templateContent);
             console.log(blobResponse);
             // console.log(JSON.stringify(config.branches));

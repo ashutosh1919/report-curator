@@ -2,10 +2,16 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
+import * as fs from 'fs';
+
 import { getActionSecrets } from './helpers/secrets';
 import * as repOps from './helpers/repository';
 import * as apiOps from './helpers/api';
 // import { getViewers, getCloners } from './helpers/traffic';
+
+function getReportTemplateContent(): string {
+  return fs.readFileSync('templates/index.html', 'utf8').toString();
+}
 
 async function curate(){
     try {
@@ -46,11 +52,12 @@ async function curate(){
                   reportBranch);
         }
 
-        let templateContent: string = repOps.pushTemplateBlobContent(
-            config.octokit,
-            owner,
-            repository
-        );
+        let templateContent: string = getReportTemplateContent()
+        // let templateContent: string = repOps.pushTemplateBlobContent(
+        //     config.octokit,
+        //     owner,
+        //     repository
+        // );
         let blobResponse: any = await apiOps.createFileBlobV3(
             config.octokit,
             owner,
