@@ -11,21 +11,22 @@ async function curate(){
         const nameToGreet: string = core.getInput('who-to-greet');
         console.log(`Hello ${nameToGreet}!`);
         const authToken: string = core.getInput('auth_token');
+        const reportBranch: string = core.getInput('report_branch');
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
         const payloadObj: any = JSON.parse(payload);
-        console.log(`The event payload: ${payload}`);
+        // console.log(`The event payload: ${payload}`);
 
         const repository: string = payloadObj['repository']['name'];
         const owner: string = payloadObj['repository']['owner']['name'];
 
-        console.log(repository);
-        console.log(owner);
+        // console.log(repository);
+        // console.log(owner);
 
         let config: any = await getActionSecrets(authToken, payloadObj);
 
-        console.log(JSON.stringify(config));
+        console.log(JSON.stringify(config.branches));
         
         // getViewers(authToken, owner, repository)
         //   .then(res => JSON.stringify(res))

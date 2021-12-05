@@ -6,6 +6,14 @@ export async function getGitResponseV3(octokit: any, url: string, headers: objec
     });
 }
 
+export function getGitBranchesV3(
+        octokit: any,
+        owner: string,
+        repository: string): Promise<any> {
+    return getGitResponseV3(octokit,
+        `GET /repos/${owner}/${repository}/branches`);
+}
+
 export function getBranchRefV3(
         octokit: any,
         owner: string,

@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBranchRefV3 = exports.getGitResponseV3 = void 0;
+exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,6 +26,10 @@ function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     });
 }
 exports.getGitResponseV3 = getGitResponseV3;
+function getGitBranchesV3(octokit, owner, repository) {
+    return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/branches`);
+}
+exports.getGitBranchesV3 = getGitBranchesV3;
 function getBranchRefV3(octokit, owner, repository, branch) {
     return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
@@ -55,7 +59,7 @@ exports.v3Headers = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = void 0;
+exports.isBranchExists = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = void 0;
 function getCurrentBranchName(payload) {
     return payload["repository"]["default_branch"];
 }
@@ -68,6 +72,10 @@ function getRepositoryName(payload) {
     return payload["repository"]["name"];
 }
 exports.getRepositoryName = getRepositoryName;
+function isBranchExists(config, branch) {
+    return true;
+}
+exports.isBranchExists = isBranchExists;
 
 
 /***/ }),
@@ -119,15 +127,13 @@ function getActionSecrets(authToken, payload) {
         let repository = repOps.getRepositoryName(payload);
         let branch = repOps.getCurrentBranchName(payload);
         let octokit = yield getOctokitContext(authToken);
-        let baseSHA = yield apiOps.getBranchRefV3(octokit, owner, repository, branch);
-        console.log("Base SHA");
-        console.log(baseSHA);
+        let branches = yield apiOps.getGitBranchesV3(octokit, owner, repository);
         return {
             octokit: octokit,
             owner: owner,
             repository: repository,
             branch: branch,
-            baseSHA: baseSHA
+            branches: branches
         };
     });
 }
@@ -181,16 +187,17 @@ function curate() {
             const nameToGreet = core.getInput('who-to-greet');
             console.log(`Hello ${nameToGreet}!`);
             const authToken = core.getInput('auth_token');
+            const reportBranch = core.getInput('report_branch');
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             const payloadObj = JSON.parse(payload);
-            console.log(`The event payload: ${payload}`);
+            // console.log(`The event payload: ${payload}`);
             const repository = payloadObj['repository']['name'];
             const owner = payloadObj['repository']['owner']['name'];
-            console.log(repository);
-            console.log(owner);
+            // console.log(repository);
+            // console.log(owner);
             let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            console.log(JSON.stringify(config));
+            console.log(JSON.stringify(config.branches));
             // getViewers(authToken, owner, repository)
             //   .then(res => JSON.stringify(res))
             //   .then(res => console.log(res))

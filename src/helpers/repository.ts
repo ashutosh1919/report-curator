@@ -10,3 +10,7 @@ export function getRepositoryOwner(payload: any): string {
 export function getRepositoryName(payload: any): string {
     return payload["repository"]["name"];
 }
+
+export function isBranchExists(config: any, branch: string): boolean {
+    return true;
+}

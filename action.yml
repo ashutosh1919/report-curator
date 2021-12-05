@@ -5,6 +5,10 @@ inputs:
     description: "Access token to get the data about the repository."
     required: true
     default: ''
+  report_branch:
+    description: "Branch to store the report related UI files"
+    required: true
+    default: 'report'
   who-to-greet:  # id of input
     description: 'Who to greet'
     required: true
