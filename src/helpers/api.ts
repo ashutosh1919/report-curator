@@ -33,7 +33,7 @@ export async function createBranchRefV3(
     return await octokit.request(
         `POST /repos/${owner}/${repository}/git/refs`,
         {
-            ref: refBranch,
+            ref: `ref/heads/${refBranch}`,
             sha: baseSHA
         }
     );
