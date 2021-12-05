@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -43,6 +43,15 @@ function createBranchRefV3(octokit, owner, repository, refBranch, baseSHA) {
     });
 }
 exports.createBranchRefV3 = createBranchRefV3;
+function createFileBlobV3(octokit, owner, repository, content, encoding = 'utf8') {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`POST /repos/${owner}/${repository}/git/blobs`, {
+            content: content,
+            encoding: encoding
+        });
+    });
+}
+exports.createFileBlobV3 = createFileBlobV3;
 
 
 /***/ }),
@@ -63,12 +72,32 @@ exports.v3Headers = {
 /***/ }),
 
 /***/ 3642:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
+exports.pushTemplateBlobContent = exports.getReportTemplateContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
+const fs = __importStar(__nccwpck_require__(5747));
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -94,6 +123,14 @@ function getBranchConfig(branchConfig, branch) {
     return {};
 }
 exports.getBranchConfig = getBranchConfig;
+function getReportTemplateContent() {
+    return fs.readFileSync('./templates/index.html', 'utf8').toString();
+}
+exports.getReportTemplateContent = getReportTemplateContent;
+function pushTemplateBlobContent(octokit, owner, repository) {
+    return getReportTemplateContent();
+}
+exports.pushTemplateBlobContent = pushTemplateBlobContent;
 
 
 /***/ }),
@@ -221,8 +258,12 @@ function curate() {
             let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             if (Object.keys(reportBranchConfig).length === 0) {
                 let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
-                console.log(res);
+                config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+                reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             }
+            let templateContent = repOps.pushTemplateBlobContent(config.octokit, owner, repository);
+            let blobResponse = yield apiOps.createFileBlobV3(config.octokit, owner, repository, templateContent);
+            console.log(blobResponse);
             // console.log(JSON.stringify(config.branches));
             // getViewers(authToken, owner, repository)
             //   .then(res => JSON.stringify(res))
