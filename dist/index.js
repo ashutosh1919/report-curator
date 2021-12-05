@@ -98,6 +98,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pushTemplateBlobContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
 const fs = __importStar(__nccwpck_require__(5747));
+const path = __importStar(__nccwpck_require__(5622));
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -124,12 +125,13 @@ function getBranchConfig(branchConfig, branch) {
 }
 exports.getBranchConfig = getBranchConfig;
 function getReportTemplateContent() {
-    return fs.readFileSync('./templates/index.html', 'utf8').toString();
+    return fs.readFileSync(path.join(__dirname, './templates/index.html'), 'utf8').toString();
 }
 function pushTemplateBlobContent(octokit, owner, repository) {
     return getReportTemplateContent();
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
+// console.log(getReportTemplateContent())
 
 
 /***/ }),

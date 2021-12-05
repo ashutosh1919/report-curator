@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 
 export function cloneJSON(jsonObj: any): any {
     return JSON.parse(JSON.stringify(jsonObj));
@@ -26,7 +27,7 @@ export function getBranchConfig(branchConfig: any, branch: string): any {
 }
 
 function getReportTemplateContent(): string {
-    return fs.readFileSync('./templates/index.html', 'utf8').toString();
+    return fs.readFileSync(path.join(__dirname, './templates/index.html'), 'utf8').toString();
 }
 
 export function pushTemplateBlobContent(
@@ -35,3 +36,5 @@ export function pushTemplateBlobContent(
         repository: string): string {
     return getReportTemplateContent();
 }
+
+// console.log(getReportTemplateContent())
