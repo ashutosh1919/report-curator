@@ -42,7 +42,7 @@ export async function pushTemplateBlobContent(
         owner,
         repository,
         'index.html',
-        content,
+        btoa(content),
         'Updated Report using report-curator',
         reportBranch,
     );

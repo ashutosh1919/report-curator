@@ -166,7 +166,7 @@ function getReportTemplateContent() {
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        return yield apiOps.putFileContentInBranchV3(octokit, owner, repository, 'index.html', content, 'Updated Report using report-curator', reportBranch);
+        return yield apiOps.putFileContentInBranchV3(octokit, owner, repository, 'index.html', btoa(content), 'Updated Report using report-curator', reportBranch);
     });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
