@@ -37,6 +37,15 @@ export async function pushTemplateBlobContent(
         repository: string,
         reportBranch: string): Promise<any> {
     let content: string = getReportTemplateContent();
+    let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
+        octokit,
+        owner,
+        repository,
+        '*',
+        'Deleted all files from report branch',
+        reportBranch
+    );
+    console.log(deleteFilesRes);
     return await apiOps.putFileContentInBranchV3(
         octokit,
         owner,

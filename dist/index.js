@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.putFileContentInBranchV3 = exports.createFileTreeV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.deleteAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileTreeV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -78,6 +78,18 @@ function putFileContentInBranchV3(octokit, owner, repository, path, content, com
     });
 }
 exports.putFileContentInBranchV3 = putFileContentInBranchV3;
+function deleteAllFilesFromBranchV3(octokit, owner, repository, path, commitMessgae, branch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`DELETE /repos/{owner}/{repo}/contents/{path}`, {
+            owner: owner,
+            repo: repository,
+            path: path,
+            message: commitMessgae,
+            branch: branch
+        });
+    });
+}
+exports.deleteAllFilesFromBranchV3 = deleteAllFilesFromBranchV3;
 
 
 /***/ }),
@@ -166,6 +178,8 @@ function getReportTemplateContent() {
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
+        let deleteFilesRes = yield apiOps.deleteAllFilesFromBranchV3(octokit, owner, repository, '*', 'Deleted all files from report branch', reportBranch);
+        console.log(deleteFilesRes);
         return yield apiOps.putFileContentInBranchV3(octokit, owner, repository, 'index.html', Buffer.from(content).toString('base64'), 'Updated Report using report-curator', reportBranch);
     });
 }

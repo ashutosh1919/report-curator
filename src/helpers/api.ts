@@ -92,3 +92,22 @@ export async function putFileContentInBranchV3(
         }
     );
 }
+
+export async function deleteAllFilesFromBranchV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        path: string,
+        commitMessgae: string,
+        branch: string): Promise<any> {
+    return await octokit.request(
+        `DELETE /repos/{owner}/{repo}/contents/{path}`,
+        {
+            owner: owner,
+            repo: repository,
+            path: path,
+            message: commitMessgae,
+            branch: branch
+        }
+    );
+}
