@@ -42,10 +42,10 @@ export async function pushTemplateBlobContent(
         owner,
         repository,
         'index.html',
-        btoa(content),
+        Buffer.from(content).toString('base64'),
         'Updated Report using report-curator',
         reportBranch,
     );
 }
 
-// console.log(getReportTemplateContent())
+// console.log(Buffer.from('Ashutosh Report Curator').toString('base64'));
