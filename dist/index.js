@@ -90,7 +90,7 @@ function getAllFilesFromBranchV3(octokit, owner, repository, ref) {
 exports.getAllFilesFromBranchV3 = getAllFilesFromBranchV3;
 function deleteAllFilesFromBranchV3(octokit, owner, repository, commitMessgae, branch) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`DELETE /repos/{owner}/{repo}/contents/{path}`, {
+        return yield octokit.request(`DELETE /repos/{owner}/{repo}/contents`, {
             owner: owner,
             repo: repository,
             message: commitMessgae,
@@ -184,10 +184,17 @@ exports.getBranchConfig = getBranchConfig;
 function getReportTemplateContent() {
     return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
 }
+function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let i = 0; i < filesData.length; i++) {
+            let file = filesData[i];
+        }
+    });
+}
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        // return await apiOps.getAllFilesFromBranchV3(
+        // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,
         //     repository,

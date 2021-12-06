@@ -115,7 +115,7 @@ export async function deleteAllFilesFromBranchV3(
         commitMessgae: string,
         branch: string): Promise<any> {
     return await octokit.request(
-        `DELETE /repos/{owner}/{repo}/contents/{path}`,
+        `DELETE /repos/{owner}/{repo}/contents`,
         {
             owner: owner,
             repo: repository,

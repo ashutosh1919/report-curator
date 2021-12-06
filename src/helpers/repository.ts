@@ -31,13 +31,25 @@ function getReportTemplateContent(): string {
     return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
 }
 
+async function deleteAllFilesFromBranch(
+        octokit: any,
+        owner: string,
+        repository: string,
+        filesData: any,
+        branch: string): Promise<any> {
+    for(let i = 0; i < filesData.length; i++) {
+        let file = filesData[i];
+
+    }
+}
+
 export async function pushTemplateBlobContent(
         octokit: any,
         owner: string,
         repository: string,
         reportBranch: string): Promise<any> {
     let content: string = getReportTemplateContent();
-    // return await apiOps.getAllFilesFromBranchV3(
+    // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
     //     octokit,
     //     owner,
     //     repository,
