@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.putFileContentInBranchV3 = exports.createFileTreeV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -52,6 +52,32 @@ function createFileBlobV3(octokit, owner, repository, content, encoding = 'utf8'
     });
 }
 exports.createFileBlobV3 = createFileBlobV3;
+function createFileTreeV3(octokit, owner, repository, content) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`POST /repos/${owner}/${repository}/git/trees`, {
+            tree: [{
+                    path: 'index.html',
+                    mode: '100644',
+                    type: 'blob',
+                    content: content
+                }]
+        });
+    });
+}
+exports.createFileTreeV3 = createFileTreeV3;
+function putFileContentInBranchV3(octokit, owner, repository, path, content, commitMessgae, branch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`PUT /repos/{owner}/{repo}/contents/{path}`, {
+            owner: owner,
+            repo: repository,
+            path: path,
+            content: content,
+            message: commitMessgae,
+            branch: branch
+        });
+    });
+}
+exports.putFileContentInBranchV3 = putFileContentInBranchV3;
 
 
 /***/ }),
@@ -95,10 +121,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pushTemplateBlobContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
 const fs = __importStar(__nccwpck_require__(5747));
 const path = __importStar(__nccwpck_require__(5622));
+const apiOps = __importStar(__nccwpck_require__(1035));
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -127,8 +163,11 @@ exports.getBranchConfig = getBranchConfig;
 function getReportTemplateContent() {
     return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
 }
-function pushTemplateBlobContent(octokit, owner, repository) {
-    return getReportTemplateContent();
+function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let content = getReportTemplateContent();
+        return yield apiOps.putFileContentInBranchV3(octokit, owner, repository, 'index.html', content, 'Updated Report using report-curator', reportBranch);
+    });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
 // console.log(getReportTemplateContent())
@@ -263,9 +302,14 @@ function curate() {
                 reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             }
             // let templateContent: string = getReportTemplateContent()
-            let templateContent = repOps.pushTemplateBlobContent(config.octokit, owner, repository);
-            let blobResponse = yield apiOps.createFileBlobV3(config.octokit, owner, repository, templateContent);
-            console.log(blobResponse);
+            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch);
+            // let blobResponse: any = await apiOps.createFileBlobV3(
+            //     config.octokit,
+            //     owner,
+            //     repository,
+            //     templateContent
+            // );
+            console.log(pushedBlobRes);
             // console.log(JSON.stringify(config.branches));
             // getViewers(authToken, owner, repository)
             //   .then(res => JSON.stringify(res))

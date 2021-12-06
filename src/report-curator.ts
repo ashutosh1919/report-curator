@@ -47,19 +47,20 @@ async function curate(){
         }
 
         // let templateContent: string = getReportTemplateContent()
-        let templateContent: string = repOps.pushTemplateBlobContent(
-            config.octokit,
-            owner,
-            repository
-        );
-        let blobResponse: any = await apiOps.createFileBlobV3(
+        let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
             config.octokit,
             owner,
             repository,
-            templateContent
+            reportBranch
         );
+        // let blobResponse: any = await apiOps.createFileBlobV3(
+        //     config.octokit,
+        //     owner,
+        //     repository,
+        //     templateContent
+        // );
 
-        console.log(blobResponse);
+        console.log(pushedBlobRes);
 
         // console.log(JSON.stringify(config.branches));
         

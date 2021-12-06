@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as apiOps from './api';
 
 export function cloneJSON(jsonObj: any): any {
     return JSON.parse(JSON.stringify(jsonObj));
@@ -30,11 +31,21 @@ function getReportTemplateContent(): string {
     return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
 }
 
-export function pushTemplateBlobContent(
+export async function pushTemplateBlobContent(
         octokit: any,
         owner: string,
-        repository: string): string {
-    return getReportTemplateContent();
+        repository: string,
+        reportBranch: string): Promise<any> {
+    let content: string = getReportTemplateContent();
+    return await apiOps.putFileContentInBranchV3(
+        octokit,
+        owner,
+        repository,
+        'index.html',
+        content,
+        'Updated Report using report-curator',
+        reportBranch,
+    );
 }
 
 // console.log(getReportTemplateContent())
