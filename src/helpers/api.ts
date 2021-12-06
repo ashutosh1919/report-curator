@@ -108,17 +108,21 @@ export async function getAllFilesFromBranchV3(
     );
 }
 
-export async function deleteAllFilesFromBranchV3(
+export async function deleteFileFromBranchV3(
         octokit: any,
         owner: string,
         repository: string,
+        path: string,
+        sha: string,
         commitMessgae: string,
         branch: string): Promise<any> {
     return await octokit.request(
-        `DELETE /repos/{owner}/{repo}/contents`,
+        `DELETE /repos/{owner}/{repo}/contents/{path}`,
         {
             owner: owner,
             repo: repository,
+            path: path,
+            sha: sha,
             message: commitMessgae,
             branch: branch
         }

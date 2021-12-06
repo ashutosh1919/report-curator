@@ -39,7 +39,15 @@ async function deleteAllFilesFromBranch(
         branch: string): Promise<any> {
     for(let i = 0; i < filesData.length; i++) {
         let file = filesData[i];
-
+        await apiOps.deleteFileFromBranchV3(
+            octokit,
+            owner,
+            repository,
+            file.path,
+            file.sha,
+            `Deleting file ${file.name}`,
+            branch
+        );
     }
 }
 
@@ -49,20 +57,28 @@ export async function pushTemplateBlobContent(
         repository: string,
         reportBranch: string): Promise<any> {
     let content: string = getReportTemplateContent();
-    // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
-    //     octokit,
-    //     owner,
-    //     repository,
-    //     `refs/heads/${reportBranch}`
-    // );
-    let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
+    let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         octokit,
         owner,
         repository,
-        'Deleted all files from report branch',
+        `refs/heads/${reportBranch}`
+    );
+
+    await deleteAllFilesFromBranch(
+        octokit,
+        owner,
+        repository,
+        allFiles.data,
         reportBranch
     );
-    console.log(deleteFilesRes);
+    // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
+    //     octokit,
+    //     owner,
+    //     repository,
+    //     'Deleted all files from report branch',
+    //     reportBranch
+    // );
+    // console.log(deleteFilesRes);
     return await apiOps.putFileContentInBranchV3(
         octokit,
         owner,
