@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.updateReferenceV3 = exports.createCommitV3 = exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -105,6 +105,28 @@ function createFileTreeV3(octokit, owner, repository, path, content, mode = '100
     });
 }
 exports.createFileTreeV3 = createFileTreeV3;
+function createCommitV3(octokit, owner, repository, commitMessage, treeSHA) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`POST /repos/{owner}/{repo}/git/commits`, {
+            owner: owner,
+            repo: repository,
+            message: commitMessage,
+            tree: treeSHA
+        });
+    });
+}
+exports.createCommitV3 = createCommitV3;
+function updateReferenceV3(octokit, owner, repository, branch, sha) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`PATCH /repos/{owner}/{repo}/git/refs/{ref}`, {
+            owner: owner,
+            repo: repository,
+            ref: `refs/heads/${branch}`,
+            sha: sha
+        });
+    });
+}
+exports.updateReferenceV3 = updateReferenceV3;
 
 
 /***/ }),
@@ -201,7 +223,9 @@ function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch)
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        return yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
+        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
+        let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha);
+        return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha);
         // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,

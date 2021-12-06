@@ -135,3 +135,37 @@ export async function createFileTreeV3(
         }
     );
 }
+
+export async function createCommitV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        commitMessage: string,
+        treeSHA: string): Promise<any> {
+    return await octokit.request(
+        `POST /repos/{owner}/{repo}/git/commits`,
+        {
+            owner: owner,
+            repo: repository,
+            message: commitMessage,
+            tree: treeSHA
+        }
+    );
+}
+
+export async function updateReferenceV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        branch: string,
+        sha: string): Promise<any> {
+    return await octokit.request(
+        `PATCH /repos/{owner}/{repo}/git/refs/{ref}`,
+        {
+            owner: owner,
+            repo: repository,
+            ref: `refs/heads/${branch}`,
+            sha: sha
+        }
+    );
+}
