@@ -137,7 +137,8 @@ export async function createFileDeleteTreeV3(
         `POST /repos/{owner}/{repo}/git/trees`,
         {
             owner: owner,
-            repo: repository
+            repo: repository,
+            tree: []
         }
     );
 }

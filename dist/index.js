@@ -105,7 +105,8 @@ function createFileDeleteTreeV3(octokit, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
             owner: owner,
-            repo: repository
+            repo: repository,
+            tree: []
         });
     });
 }
