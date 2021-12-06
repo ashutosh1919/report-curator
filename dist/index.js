@@ -88,12 +88,11 @@ function getAllFilesFromBranchV3(octokit, owner, repository, ref) {
     });
 }
 exports.getAllFilesFromBranchV3 = getAllFilesFromBranchV3;
-function deleteAllFilesFromBranchV3(octokit, owner, repository, path, commitMessgae, branch) {
+function deleteAllFilesFromBranchV3(octokit, owner, repository, commitMessgae, branch) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`DELETE /repos/{owner}/{repo}/contents/{path}`, {
             owner: owner,
             repo: repository,
-            path: path,
             message: commitMessgae,
             branch: branch
         });
@@ -188,25 +187,15 @@ function getReportTemplateContent() {
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        return yield apiOps.getAllFilesFromBranchV3(octokit, owner, repository, `refs/heads/${reportBranch}`);
-        // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
+        // return await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,
         //     repository,
-        //     '*',
-        //     'Deleted all files from report branch',
-        //     reportBranch
+        //     `refs/heads/${reportBranch}`
         // );
-        // console.log(deleteFilesRes);
-        // return await apiOps.putFileContentInBranchV3(
-        //     octokit,
-        //     owner,
-        //     repository,
-        //     'index.html',
-        //     Buffer.from(content).toString('base64'),
-        //     'Updated Report using report-curator',
-        //     reportBranch,
-        // );
+        let deleteFilesRes = yield apiOps.deleteAllFilesFromBranchV3(octokit, owner, repository, 'Deleted all files from report branch', reportBranch);
+        console.log(deleteFilesRes);
+        return yield apiOps.putFileContentInBranchV3(octokit, owner, repository, 'index.html', Buffer.from(content).toString('base64'), 'Updated Report using report-curator', reportBranch);
     });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;

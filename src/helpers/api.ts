@@ -112,7 +112,6 @@ export async function deleteAllFilesFromBranchV3(
         octokit: any,
         owner: string,
         repository: string,
-        path: string,
         commitMessgae: string,
         branch: string): Promise<any> {
     return await octokit.request(
@@ -120,7 +119,6 @@ export async function deleteAllFilesFromBranchV3(
         {
             owner: owner,
             repo: repository,
-            path: path,
             message: commitMessgae,
             branch: branch
         }
