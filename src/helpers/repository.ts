@@ -57,20 +57,25 @@ export async function pushTemplateBlobContent(
         repository: string,
         reportBranch: string): Promise<any> {
     let content: string = getReportTemplateContent();
-    let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
+    return await apiOps.createFileDeleteTreeV3(
         octokit,
         owner,
-        repository,
-        `refs/heads/${reportBranch}`
+        repository
     );
+    // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
+    //     octokit,
+    //     owner,
+    //     repository,
+    //     `refs/heads/${reportBranch}`
+    // );
 
-    await deleteAllFilesFromBranch(
-        octokit,
-        owner,
-        repository,
-        allFiles.data,
-        reportBranch
-    );
+    // await deleteAllFilesFromBranch(
+    //     octokit,
+    //     owner,
+    //     repository,
+    //     allFiles.data,
+    //     reportBranch
+    // );
     // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
     //     octokit,
     //     owner,
@@ -79,15 +84,15 @@ export async function pushTemplateBlobContent(
     //     reportBranch
     // );
     // console.log(deleteFilesRes);
-    return await apiOps.putFileContentInBranchV3(
-        octokit,
-        owner,
-        repository,
-        'index.html',
-        Buffer.from(content).toString('base64'),
-        'Updated Report using report-curator',
-        reportBranch,
-    );
+    // return await apiOps.putFileContentInBranchV3(
+    //     octokit,
+    //     owner,
+    //     repository,
+    //     'index.html',
+    //     Buffer.from(content).toString('base64'),
+    //     'Updated Report using report-curator',
+    //     reportBranch,
+    // );
 }
 
 // console.log(Buffer.from('Ashutosh Report Curator').toString('base64'));

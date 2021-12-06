@@ -128,3 +128,16 @@ export async function deleteFileFromBranchV3(
         }
     );
 }
+
+export async function createFileDeleteTreeV3(
+        octokit: any,
+        owner: string,
+        repository: string): Promise<any> {
+    return await octokit.request(
+        `POST /repos/{owner}/{repo}/git/trees`,
+        {
+            owner: owner,
+            repo: repository
+        }
+    );
+}
