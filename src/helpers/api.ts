@@ -97,14 +97,12 @@ export async function getAllFilesFromBranchV3(
         octokit: any,
         owner: string,
         repository: string,
-        path: string,
         ref: string): Promise<any> {
     return await octokit.request(
-        `GET /repos/{owner}/{repo}/contents/{path}`,
+        `GET /repos/{owner}/{repo}/contents`,
         {
             owner: owner,
             repo: repository,
-            path: path,
             ref: ref
         }
     );

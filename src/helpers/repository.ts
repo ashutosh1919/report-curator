@@ -41,7 +41,6 @@ export async function pushTemplateBlobContent(
         octokit,
         owner,
         repository,
-        '*',
         `refs/heads/${reportBranch}`
     );
     // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(

@@ -78,12 +78,11 @@ function putFileContentInBranchV3(octokit, owner, repository, path, content, com
     });
 }
 exports.putFileContentInBranchV3 = putFileContentInBranchV3;
-function getAllFilesFromBranchV3(octokit, owner, repository, path, ref) {
+function getAllFilesFromBranchV3(octokit, owner, repository, ref) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`GET /repos/{owner}/{repo}/contents/{path}`, {
+        return yield octokit.request(`GET /repos/{owner}/{repo}/contents`, {
             owner: owner,
             repo: repository,
-            path: path,
             ref: ref
         });
     });
@@ -189,7 +188,7 @@ function getReportTemplateContent() {
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        return yield apiOps.getAllFilesFromBranchV3(octokit, owner, repository, '*', `refs/heads/${reportBranch}`);
+        return yield apiOps.getAllFilesFromBranchV3(octokit, owner, repository, `refs/heads/${reportBranch}`);
         // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
         //     octokit,
         //     owner,
