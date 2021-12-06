@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createFileDeleteTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileTreeV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
+exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = void 0;
 const constants_1 = __nccwpck_require__(1439);
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -52,19 +52,6 @@ function createFileBlobV3(octokit, owner, repository, content, encoding = 'utf8'
     });
 }
 exports.createFileBlobV3 = createFileBlobV3;
-function createFileTreeV3(octokit, owner, repository, content) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`POST /repos/${owner}/${repository}/git/trees`, {
-            tree: [{
-                    path: 'index.html',
-                    mode: '100644',
-                    type: 'blob',
-                    content: content
-                }]
-        });
-    });
-}
-exports.createFileTreeV3 = createFileTreeV3;
 function putFileContentInBranchV3(octokit, owner, repository, path, content, commitMessgae, branch) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`PUT /repos/{owner}/{repo}/contents/{path}`, {
@@ -101,16 +88,23 @@ function deleteFileFromBranchV3(octokit, owner, repository, path, sha, commitMes
     });
 }
 exports.deleteFileFromBranchV3 = deleteFileFromBranchV3;
-function createFileDeleteTreeV3(octokit, owner, repository) {
+function createFileTreeV3(octokit, owner, repository, path, content, mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
             owner: owner,
             repo: repository,
-            tree: []
+            tree: [
+                {
+                    path: path,
+                    mode: mode,
+                    type: type,
+                    content: content
+                }
+            ]
         });
     });
 }
-exports.createFileDeleteTreeV3 = createFileDeleteTreeV3;
+exports.createFileTreeV3 = createFileTreeV3;
 
 
 /***/ }),
@@ -207,7 +201,7 @@ function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch)
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        return yield apiOps.createFileDeleteTreeV3(octokit, owner, repository);
+        return yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
         // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,

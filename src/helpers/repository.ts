@@ -57,10 +57,12 @@ export async function pushTemplateBlobContent(
         repository: string,
         reportBranch: string): Promise<any> {
     let content: string = getReportTemplateContent();
-    return await apiOps.createFileDeleteTreeV3(
+    return await apiOps.createFileTreeV3(
         octokit,
         owner,
-        repository
+        repository,
+        'index.html',
+        content
     );
     // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
     //     octokit,

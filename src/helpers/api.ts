@@ -54,24 +54,6 @@ export async function createFileBlobV3(
     )
 }
 
-export async function createFileTreeV3(
-        octokit: any,
-        owner: string,
-        repository: string,
-        content: string): Promise<any> {
-    return await octokit.request(
-        `POST /repos/${owner}/${repository}/git/trees`,
-        {
-            tree: [{
-                path: 'index.html',
-                mode: '100644',
-                type: 'blob',
-                content: content
-            }]
-        }
-    );
-}
-
 export async function putFileContentInBranchV3(
         octokit: any,
         owner: string,
@@ -129,16 +111,27 @@ export async function deleteFileFromBranchV3(
     );
 }
 
-export async function createFileDeleteTreeV3(
+export async function createFileTreeV3(
         octokit: any,
         owner: string,
-        repository: string): Promise<any> {
+        repository: string,
+        path: string,
+        content: string,
+        mode: string = '100644',
+        type: string = 'blob'): Promise<any> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/trees`,
         {
             owner: owner,
             repo: repository,
-            tree: []
+            tree: [
+                {
+                    path: path,
+                    mode: mode,
+                    type: type,
+                    content: content
+                }
+            ]
         }
     );
 }
