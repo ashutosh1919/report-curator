@@ -93,6 +93,23 @@ export async function putFileContentInBranchV3(
     );
 }
 
+export async function getAllFilesFromBranchV3(
+        octokit: any,
+        owner: string,
+        repository: string,
+        path: string,
+        ref: string): Promise<any> {
+    return await octokit.request(
+        `GET /repos/{owner}/{repo}/contents/{path}`,
+        {
+            owner: owner,
+            repo: repository,
+            path: path,
+            ref: ref
+        }
+    );
+}
+
 export async function deleteAllFilesFromBranchV3(
         octokit: any,
         owner: string,
