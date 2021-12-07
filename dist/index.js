@@ -227,7 +227,9 @@ function pushTemplateBlobContent(octokit, owner, repository, reportBranch, repor
         let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha);
         console.log(commitFile);
-        return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, reportBranchConfig.commit.sha, true);
+        return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, 
+        // reportBranchConfig.commit.sha,
+        true);
         // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,
