@@ -66,6 +66,9 @@ export async function pushTemplateBlobContent(
         content,
         reportBranchConfig.commit.sha
     );
+    console.log('Report branch SHA:');
+    console.log(reportBranchConfig.commit.sha);
+    // console.log(await apiOps.getBranchRefV3(octokit, owner, repository, ));
     let commitFile = await apiOps.createCommitV3(
         octokit,
         owner,

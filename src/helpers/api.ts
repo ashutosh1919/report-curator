@@ -163,11 +163,10 @@ export async function updateReferenceV3(
         sha: string,
         force: boolean): Promise<any> {
     return await octokit.request(
-        `PATCH /repos/{owner}/{repo}/git/refs/{ref}`,
+        `PATCH /repos/{owner}/{repo}/git/refs/heads/${branch}`,
         {
             owner: owner,
             repo: repository,
-            ref: `refs/heads/${branch}`,
             sha: sha,
             force: force
         }

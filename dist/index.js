@@ -119,10 +119,9 @@ function createCommitV3(octokit, owner, repository, commitMessage, treeSHA) {
 exports.createCommitV3 = createCommitV3;
 function updateReferenceV3(octokit, owner, repository, branch, sha, force) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`PATCH /repos/{owner}/{repo}/git/refs/{ref}`, {
+        return yield octokit.request(`PATCH /repos/{owner}/{repo}/git/refs/heads/${branch}`, {
             owner: owner,
             repo: repository,
-            ref: `refs/heads/${branch}`,
             sha: sha,
             force: force
         });
@@ -226,6 +225,9 @@ function pushTemplateBlobContent(octokit, owner, repository, reportBranch, repor
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
         let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content, reportBranchConfig.commit.sha);
+        console.log('Report branch SHA:');
+        console.log(reportBranchConfig.commit.sha);
+        // console.log(await apiOps.getBranchRefV3(octokit, owner, repository, ));
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha);
         console.log(commitFile);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, 
