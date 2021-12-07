@@ -88,7 +88,9 @@ function deleteFileFromBranchV3(octokit, owner, repository, path, sha, commitMes
     });
 }
 exports.deleteFileFromBranchV3 = deleteFileFromBranchV3;
-function createFileTreeV3(octokit, owner, repository, path, content, baseTree, mode = '100644', type = 'blob') {
+function createFileTreeV3(octokit, owner, repository, path, content, 
+// baseTree: string,
+mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
             owner: owner,
@@ -99,7 +101,7 @@ function createFileTreeV3(octokit, owner, repository, path, content, baseTree, m
                     mode: mode,
                     type: type,
                     content: content,
-                    base_tree: baseTree
+                    // base_tree: baseTree
                 }
             ]
         });
