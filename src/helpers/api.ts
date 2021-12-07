@@ -117,7 +117,7 @@ export async function createFileTreeV3(
         repository: string,
         path: string,
         content: string,
-        // baseTree: string,
+        baseTree: string,
         mode: string = '100644',
         type: string = 'blob'): Promise<any> {
     return await octokit.request(
@@ -131,9 +131,9 @@ export async function createFileTreeV3(
                     mode: mode,
                     type: type,
                     content: content,
-                    // base_tree: baseTree
                 }
-            ]
+            ],
+            base_tree: baseTree
         }
     );
 }
