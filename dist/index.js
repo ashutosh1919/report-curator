@@ -214,51 +214,13 @@ exports.getBranchConfig = getBranchConfig;
 function getReportTemplateContent() {
     return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
 }
-function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let i = 0; i < filesData.length; i++) {
-            let file = filesData[i];
-            yield apiOps.deleteFileFromBranchV3(octokit, owner, repository, file.path, file.sha, `Deleting file ${file.name}`, branch);
-        }
-    });
-}
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
+        console.log(content);
         let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content, reportBranchConfig.commit.sha);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha, [reportBranchConfig.commit.sha]);
-        console.log(commitFile);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, true);
-        // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
-        //     octokit,
-        //     owner,
-        //     repository,
-        //     `refs/heads/${reportBranch}`
-        // );
-        // await deleteAllFilesFromBranch(
-        //     octokit,
-        //     owner,
-        //     repository,
-        //     allFiles.data,
-        //     reportBranch
-        // );
-        // let deleteFilesRes: string = await apiOps.deleteAllFilesFromBranchV3(
-        //     octokit,
-        //     owner,
-        //     repository,
-        //     'Deleted all files from report branch',
-        //     reportBranch
-        // );
-        // console.log(deleteFilesRes);
-        // return await apiOps.putFileContentInBranchV3(
-        //     octokit,
-        //     owner,
-        //     repository,
-        //     'index.html',
-        //     Buffer.from(content).toString('base64'),
-        //     'Updated Report using report-curator',
-        //     reportBranch,
-        // );
     });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
