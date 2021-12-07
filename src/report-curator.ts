@@ -51,7 +51,8 @@ async function curate(){
             config.octokit,
             owner,
             repository,
-            reportBranch
+            reportBranch,
+            reportBranchConfig
         );
         // let blobResponse: any = await apiOps.createFileBlobV3(
         //     config.octokit,

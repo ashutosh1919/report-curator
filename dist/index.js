@@ -116,13 +116,14 @@ function createCommitV3(octokit, owner, repository, commitMessage, treeSHA) {
     });
 }
 exports.createCommitV3 = createCommitV3;
-function updateReferenceV3(octokit, owner, repository, branch, sha) {
+function updateReferenceV3(octokit, owner, repository, branch, sha, force) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`PATCH /repos/{owner}/{repo}/git/refs/{ref}`, {
             owner: owner,
             repo: repository,
             ref: `refs/heads/${branch}`,
-            sha: sha
+            sha: sha,
+            force: force
         });
     });
 }
@@ -220,12 +221,13 @@ function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch)
         }
     });
 }
-function pushTemplateBlobContent(octokit, owner, repository, reportBranch) {
+function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
         let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha);
-        return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha);
+        console.log(commitFile);
+        return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, true);
         // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
         //     octokit,
         //     owner,
@@ -391,7 +393,7 @@ function curate() {
                 reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             }
             // let templateContent: string = getReportTemplateContent()
-            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch);
+            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportBranchConfig);
             // let blobResponse: any = await apiOps.createFileBlobV3(
             //     config.octokit,
             //     owner,

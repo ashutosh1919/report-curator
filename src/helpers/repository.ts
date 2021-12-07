@@ -55,7 +55,8 @@ export async function pushTemplateBlobContent(
         octokit: any,
         owner: string,
         repository: string,
-        reportBranch: string): Promise<any> {
+        reportBranch: string,
+        reportBranchConfig: any): Promise<any> {
     let content: string = getReportTemplateContent();
     let fileTree: any = await apiOps.createFileTreeV3(
         octokit,
@@ -71,12 +72,14 @@ export async function pushTemplateBlobContent(
         'Updated Report using report-curator',
         fileTree.data.sha
     );
+    console.log(commitFile);
     return await apiOps.updateReferenceV3(
         octokit,
         owner,
         repository,
         reportBranch,
-        commitFile.data.sha
+        commitFile.data.sha,
+        true
     );
     // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
     //     octokit,
