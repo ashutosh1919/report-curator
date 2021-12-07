@@ -45,6 +45,7 @@ async function curate(){
                   config.branches,
                   reportBranch);
         }
+        console.log(reportBranchConfig);
 
         // let templateContent: string = getReportTemplateContent()
         let pushedBlobRes: any = await repOps.pushTemplateBlobContent(

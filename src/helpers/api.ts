@@ -143,14 +143,16 @@ export async function createCommitV3(
         owner: string,
         repository: string,
         commitMessage: string,
-        treeSHA: string): Promise<any> {
+        treeSHA: string,
+        parents: string[] = []): Promise<any> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/commits`,
         {
             owner: owner,
             repo: repository,
             message: commitMessage,
-            tree: treeSHA
+            tree: treeSHA,
+            parents: parents
         }
     );
 }

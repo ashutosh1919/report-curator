@@ -66,15 +66,13 @@ export async function pushTemplateBlobContent(
         content,
         reportBranchConfig.commit.sha
     );
-    console.log('Report branch SHA:');
-    console.log(reportBranchConfig.commit.sha);
-    // console.log(await apiOps.getBranchRefV3(octokit, owner, repository, ));
     let commitFile = await apiOps.createCommitV3(
         octokit,
         owner,
         repository,
         'Updated Report using report-curator',
-        fileTree.data.sha
+        fileTree.data.sha,
+        [reportBranchConfig.commit.sha]
     );
     console.log(commitFile);
     return await apiOps.updateReferenceV3(
@@ -83,7 +81,6 @@ export async function pushTemplateBlobContent(
         repository,
         reportBranch,
         commitFile.data.sha,
-        // reportBranchConfig.commit.sha,
         true
     );
     // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
