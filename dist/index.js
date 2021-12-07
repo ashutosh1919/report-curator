@@ -224,7 +224,7 @@ function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch)
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', Buffer.from(content).toString('base64'), reportBranchConfig.commit.sha);
+        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content, reportBranchConfig.commit.sha);
         console.log('Report branch SHA:');
         console.log(reportBranchConfig.commit.sha);
         // console.log(await apiOps.getBranchRefV3(octokit, owner, repository, ));

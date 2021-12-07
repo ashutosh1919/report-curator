@@ -63,7 +63,7 @@ export async function pushTemplateBlobContent(
         owner,
         repository,
         'index.html',
-        Buffer.from(content).toString('base64'),
+        content,
         reportBranchConfig.commit.sha
     );
     console.log('Report branch SHA:');
