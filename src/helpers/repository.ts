@@ -63,7 +63,8 @@ export async function pushTemplateBlobContent(
         owner,
         repository,
         'index.html',
-        content
+        content,
+        reportBranchConfig.commit.sha
     );
     let commitFile = await apiOps.createCommitV3(
         octokit,

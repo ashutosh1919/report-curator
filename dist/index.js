@@ -88,7 +88,7 @@ function deleteFileFromBranchV3(octokit, owner, repository, path, sha, commitMes
     });
 }
 exports.deleteFileFromBranchV3 = deleteFileFromBranchV3;
-function createFileTreeV3(octokit, owner, repository, path, content, mode = '100644', type = 'blob') {
+function createFileTreeV3(octokit, owner, repository, path, content, baseTree, mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
             owner: owner,
@@ -98,7 +98,8 @@ function createFileTreeV3(octokit, owner, repository, path, content, mode = '100
                     path: path,
                     mode: mode,
                     type: type,
-                    content: content
+                    content: content,
+                    base_tree: baseTree
                 }
             ]
         });
@@ -224,7 +225,7 @@ function deleteAllFilesFromBranch(octokit, owner, repository, filesData, branch)
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         let content = getReportTemplateContent();
-        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content);
+        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content, reportBranchConfig.commit.sha);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha);
         console.log(commitFile);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, 
