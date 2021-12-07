@@ -78,7 +78,7 @@ export async function pushTemplateBlobContent(
         owner,
         repository,
         reportBranch,
-        commitFile.data.sha,
+        reportBranchConfig.commit.sha,
         true
     );
     // let allFiles: any =  await apiOps.getAllFilesFromBranchV3(
