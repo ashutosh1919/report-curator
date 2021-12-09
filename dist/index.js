@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.updateReferenceV3 = exports.createCommitV3 = exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = exports.getTemplateFileText = void 0;
+exports.updateReferenceV3 = exports.createCommitV3 = exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = exports.getTextFromFileUrl = exports.getTemplateFileText = void 0;
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const constants_1 = __nccwpck_require__(1439);
 function getTemplateFileText() {
@@ -29,6 +29,13 @@ function getTemplateFileText() {
     });
 }
 exports.getTemplateFileText = getTemplateFileText;
+function getTextFromFileUrl(fileUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const fileText = yield (0, node_fetch_1.default)(fileUrl);
+        return yield fileText.text();
+    });
+}
+exports.getTextFromFileUrl = getTextFromFileUrl;
 function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(url, {
@@ -99,19 +106,12 @@ function deleteFileFromBranchV3(octokit, owner, repository, path, sha, commitMes
     });
 }
 exports.deleteFileFromBranchV3 = deleteFileFromBranchV3;
-function createFileTreeV3(octokit, owner, repository, path, content, baseTree, mode = '100644', type = 'blob') {
+function createFileTreeV3(octokit, owner, repository, tree, baseTree) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
             owner: owner,
             repo: repository,
-            tree: [
-                {
-                    path: path,
-                    mode: mode,
-                    type: type,
-                    content: content,
-                }
-            ],
+            tree: tree,
             base_tree: baseTree
         });
     });
@@ -150,10 +150,28 @@ exports.updateReferenceV3 = updateReferenceV3;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.templateUrl = exports.v3Headers = void 0;
+exports.templateUrl = exports.template = exports.v3Headers = void 0;
 exports.v3Headers = {
     "access-control-allow-origin": "*",
     "accept": "application/vnd.github.v3+json"
+};
+exports.template = {
+    html: [
+        {
+            name: 'index.html',
+            url: 'https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/index.html'
+        }
+    ],
+    css: [
+        {
+            name: 'main.css',
+            url: 'https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/main.css'
+        },
+        {
+            name: 'fonts.css',
+            url: 'https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/fonts.css'
+        }
+    ]
 };
 exports.templateUrl = "https://raw.githubusercontent.com/ashutosh1919/report-curator/main/templates/index.html";
 
@@ -195,9 +213,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pushTemplateBlobContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
-const fs = __importStar(__nccwpck_require__(5747));
-const path = __importStar(__nccwpck_require__(5622));
 const apiOps = __importStar(__nccwpck_require__(1035));
+const constants_1 = __nccwpck_require__(1439);
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -223,19 +240,43 @@ function getBranchConfig(branchConfig, branch) {
     return {};
 }
 exports.getBranchConfig = getBranchConfig;
-function getReportTemplateContent() {
-    return fs.readFileSync(path.join(__dirname, '../templates/index.html'), 'utf8').toString();
+function createBlobFromFileUrl(fileUrl, filePath, mode = '100644', type = 'blob') {
+    return __awaiter(this, void 0, void 0, function* () {
+        let content = yield apiOps.getTextFromFileUrl(fileUrl);
+        return {
+            path: filePath,
+            mode: mode,
+            type: type,
+            content: content
+        };
+    });
+}
+function createFileTreeFromTemplate() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let tree = [];
+        for (let i = 0; i < constants_1.template.html.length; i++) {
+            let blob = yield createBlobFromFileUrl(constants_1.template.html[i].url, constants_1.template.html[i].name);
+            tree.push(blob);
+        }
+        for (let i = 0; i < constants_1.template.css.length; i++) {
+            let blob = yield createBlobFromFileUrl(constants_1.template.css[i].url, constants_1.template.css[i].name);
+            tree.push(blob);
+        }
+        return tree;
+    });
 }
 function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
-        let content = yield apiOps.getTemplateFileText(); // getReportTemplateContent();
-        console.log(content);
-        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, 'index.html', content, reportBranchConfig.commit.sha);
+        // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
+        // console.log(content);
+        let contentTree = yield createFileTreeFromTemplate();
+        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, contentTree, reportBranchConfig.commit.sha);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha, [reportBranchConfig.commit.sha]);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, true);
     });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
+// createFileTreeFromTemplate().then(res => console.log(res));
 // apiOps.getTemplateFileText().then(res=> console.log(JSON.stringify(res)));
 
 

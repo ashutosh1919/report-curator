@@ -1,19 +1,19 @@
 @font-face {
     font-family: 'Atkinson Hyperlegible Bold';
-    src: url('./fonts/Atkinson-Hyperlegible-Bold.woff2') format('woff2');
+    src: url('https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/fonts/Atkinson-Hyperlegible-Bold.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Atkinson Hyperlegible BoldItalic';
-    src: url('./fonts/Atkinson-Hyperlegible-BoldItalic.woff2') format('woff2');
+    src: url('https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/fonts/Atkinson-Hyperlegible-BoldItalic.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Atkinson Hyperlegible Italic';
-    src: url('./fonts/Atkinson-Hyperlegible-Italic.woff2') format('woff2');
+    src: url('https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/fonts/Atkinson-Hyperlegible-Italic.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Atkinson Hyperlegible Regular';
-    src: url('./fonts/Atkinson-Hyperlegible-Regular.woff2') format('woff2');
+    src: url('https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/fonts/Atkinson-Hyperlegible-Regular.woff2') format('woff2');
 }

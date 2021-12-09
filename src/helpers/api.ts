@@ -6,6 +6,11 @@ export async function getTemplateFileText(): Promise<string> {
     return await template.text();
 }
 
+export async function getTextFromFileUrl(fileUrl: string): Promise<string> {
+    const fileText = await fetch(fileUrl);
+    return await fileText.text();
+}
+
 export async function getGitResponseV3(octokit: any, url: string, headers: object = v3Headers): Promise<any>{
     return await octokit.request(url, {
         header: JSON.stringify(headers)
@@ -121,24 +126,14 @@ export async function createFileTreeV3(
         octokit: any,
         owner: string,
         repository: string,
-        path: string,
-        content: string,
-        baseTree: string,
-        mode: string = '100644',
-        type: string = 'blob'): Promise<any> {
+        tree: any,
+        baseTree: string): Promise<any> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/trees`,
         {
             owner: owner,
             repo: repository,
-            tree: [
-                {
-                    path: path,
-                    mode: mode,
-                    type: type,
-                    content: content,
-                }
-            ],
+            tree: tree,
             base_tree: baseTree
         }
     );
