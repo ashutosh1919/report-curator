@@ -1,0 +1,17 @@
+@import url('./fonts.css');
+
+.font-bold {
+    font-family: 'Atkinson Hyperlegible Bold';
+}
+
+.font-bold-italic {
+    font-family: 'Atkinson Hyperlegible BoldItalic';
+}
+
+.font-italic {
+    font-family: 'Atkinson Hyperlegible Italic';
+}
+
+.font-regular {
+    font-family: 'Atkinson Hyperlegible Regular';
+}
