@@ -37,7 +37,7 @@ export async function pushTemplateBlobContent(
         repository: string,
         reportBranch: string,
         reportBranchConfig: any): Promise<any> {
-    let content: string = getReportTemplateContent();
+    let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
     console.log(content);
     let fileTree: any = await apiOps.createFileTreeV3(
         octokit,
@@ -65,4 +65,4 @@ export async function pushTemplateBlobContent(
     );
 }
 
-// console.log(Buffer.from('Ashutosh Report Curator').toString('base64'));
+// apiOps.getTemplateFileText().then(res=> console.log(JSON.stringify(res)));

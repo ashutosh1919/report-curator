@@ -1,4 +1,10 @@
-import { v3Headers } from './constants';
+import fetch from 'node-fetch'; 
+import { v3Headers, templateUrl } from './constants';
+
+export async function getTemplateFileText(): Promise<string> {
+    const template = await fetch(templateUrl);
+    return await template.text();
+}
 
 export async function getGitResponseV3(octokit: any, url: string, headers: object = v3Headers): Promise<any>{
     return await octokit.request(url, {
