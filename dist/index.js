@@ -553,22 +553,15 @@ function curate() {
         try {
             // `who-to-greet` input defined in action metadata file
             const nameToGreet = core.getInput('who-to-greet');
-            console.log(`Hello ${nameToGreet}!`);
             const authToken = core.getInput('auth_token');
-            console.log('Hi1');
             const reportBranch = core.getInput('report_branch');
-            console.log('Hi2');
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2);
-            console.log(payload);
             const payloadObj = JSON.parse(payload);
             // console.log(`The event payload: ${payload}`);
             const repository = payloadObj['repository']['name'];
             const owner = payloadObj['repository']['owner']['name'];
-            console.log(repository);
-            console.log(owner);
             let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            console.log(`config: ${config}`);
             let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
             let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             console.log(`Report config: ${reportBranchConfig}`);
@@ -587,7 +580,6 @@ function curate() {
             //     repository,
             //     templateContent
             // );
-            console.log(pushedBlobRes);
             // console.log(JSON.stringify(config.branches));
             // getViewers(authToken, owner, repository)
             //   .then(res => JSON.stringify(res))
