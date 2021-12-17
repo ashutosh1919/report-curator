@@ -88,7 +88,7 @@ function createTrafficPlot(divClass, plotTitle, xlabel, xDates, yLabel, yCount, 
 }
 
 function onLoad() {
-    // console.log(data);
+    console.log(data);
     createTrafficPlot(
         'traffic-views',
         'Views',
