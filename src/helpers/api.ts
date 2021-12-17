@@ -126,15 +126,13 @@ export async function createFileTreeV3(
         octokit: any,
         owner: string,
         repository: string,
-        tree: any,
-        baseTree: string): Promise<any> {
+        tree: any): Promise<any> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/trees`,
         {
             owner: owner,
             repo: repository,
-            tree: tree,
-            base_tree: baseTree
+            tree: tree
         }
     );
 }
