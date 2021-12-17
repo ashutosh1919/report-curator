@@ -79,6 +79,8 @@ async function generateDataBlobFromSchema(
         owner,
         repository
     );
+    console.log(viewsData);
+    console.log(clonesData);
     let data: any = JSON.parse(JSON.stringify(dataSchema));
     data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
     data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
