@@ -23,16 +23,18 @@ async function curate(){
         const repository: string = payloadObj['repository']['name'];
         const owner: string = payloadObj['repository']['owner']['name'];
 
-        // console.log(repository);
-        // console.log(owner);
+        console.log(repository);
+        console.log(owner);
 
         let config: any = await getActionSecrets(authToken, payloadObj);
+        console.log(`config: ${config}`);
         let defaultBranchConfig: any = await repOps.getBranchConfig(
             config.branches,
             config.branch);
         let reportBranchConfig: any = await repOps.getBranchConfig(
             config.branches,
             reportBranch);
+        console.log(`Report config: ${reportBranchConfig}`);
         if(Object.keys(reportBranchConfig).length === 0){
               let res: any = await apiOps.createBranchRefV3(
                   config.octokit,
@@ -41,6 +43,7 @@ async function curate(){
                   reportBranch,
                   defaultBranchConfig["commit"]["sha"]);
               config = await getActionSecrets(authToken, payloadObj);
+              console.log(`config: ${config}`);
               reportBranchConfig = await repOps.getBranchConfig(
                   config.branches,
                   reportBranch);
