@@ -13,10 +13,13 @@ async function curate(){
         const nameToGreet: string = core.getInput('who-to-greet');
         console.log(`Hello ${nameToGreet}!`);
         const authToken: string = core.getInput('auth_token');
+        console.log('Hi1');
         const reportBranch: string = core.getInput('report_branch');
+        console.log('Hi2');
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
+        console.log(payload);
         const payloadObj: any = JSON.parse(payload);
         // console.log(`The event payload: ${payload}`);
 
