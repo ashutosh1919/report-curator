@@ -1,10 +1,4 @@
-on:
-  push:
-    branches:
-      - main
-  release:
-    types:
-      - created
+on: [push]
 
 jobs:
   hello_world_job:
