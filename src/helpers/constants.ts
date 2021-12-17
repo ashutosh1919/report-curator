@@ -25,6 +25,10 @@ export const template = {
         {
             name: 'plot.js',
             url: 'https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/plot.js'
+        },
+        {
+            name: 'tailwind.config.js',
+            url: 'https://raw.githubusercontent.com/ashutosh1919/report-curator/main/template/tailwind.config.js'
         }
     ]
 }

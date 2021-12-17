@@ -106,6 +106,10 @@ async function createFileTreeFromTemplate(
         let blob = await createBlobFromFileUrl(template.css[i].url, template.css[i].name);
         tree.push(blob);
     }
+    for(let i = 0; i < template.js.length; i++){
+        let blob = await createBlobFromFileUrl(template.js[i].url, template.js[i].name);
+        tree.push(blob);
+    }
     tree.push(
         await generateDataBlobFromSchema(
             octokit,

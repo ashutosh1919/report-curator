@@ -19,3 +19,4 @@ lib/
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
 .env
+.DS_Store
