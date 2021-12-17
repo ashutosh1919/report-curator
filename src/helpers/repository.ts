@@ -106,10 +106,10 @@ async function createFileTreeFromTemplate(
         let blob = await createBlobFromFileUrl(template.css[i].url, template.css[i].name);
         tree.push(blob);
     }
-    for(let i = 0; i < template.js.length; i++){
-        let blob = await createBlobFromFileUrl(template.js[i].url, template.js[i].name);
-        tree.push(blob);
-    }
+    // for(let i = 0; i < template.js.length; i++){
+    //     let blob = await createBlobFromFileUrl(template.js[i].url, template.js[i].name);
+    //     tree.push(blob);
+    // }
     // tree.push(
     //     await generateDataBlobFromSchema(
     //         octokit,
@@ -128,6 +128,7 @@ export async function pushTemplateBlobContent(
         reportBranchConfig: any): Promise<any> {
     // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
     // console.log(content);
+    console.log(owner, repository);
     let contentTree = await createFileTreeFromTemplate(
         octokit,
         owner,
@@ -160,7 +161,7 @@ export async function pushTemplateBlobContent(
 
 // import { Octokit } from 'octokit';
 // let octokit = new Octokit({ auth: '' });
-// createFileTreeFromTemplate(octokit, 'ashutosh1919', 'report-curator').then(res => console.log(JSON.stringify(res)));
+// generateDataBlobFromSchema(octokit, 'ashutosh1919', 'report-curator').then(res => console.log(JSON.stringify(res)));
 
 // console.log(convertTimeStampDataToPlotData(
 //     [{"timestamp":"2021-11-19T00:00:00Z","count":12,"uniques":5},{"timestamp":"2021-11-20T00:00:00Z","count":1,"uniques":1},{"timestamp":"2021-11-21T00:00:00Z","count":9,"uniques":7},{"timestamp":"2021-11-22T00:00:00Z","count":12,"uniques":12},{"timestamp":"2021-11-23T00:00:00Z","count":15,"uniques":11},{"timestamp":"2021-11-24T00:00:00Z","count":11,"uniques":8},{"timestamp":"2021-11-25T00:00:00Z","count":9,"uniques":8},{"timestamp":"2021-11-26T00:00:00Z","count":11,"uniques":9},{"timestamp":"2021-11-27T00:00:00Z","count":24,"uniques":11},{"timestamp":"2021-11-28T00:00:00Z","count":7,"uniques":6},{"timestamp":"2021-11-29T00:00:00Z","count":24,"uniques":15},{"timestamp":"2021-11-30T00:00:00Z","count":13,"uniques":13},{"timestamp":"2021-12-01T00:00:00Z","count":7,"uniques":7},{"timestamp":"2021-12-02T00:00:00Z","count":9,"uniques":7}]    
