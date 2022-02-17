@@ -13,9 +13,10 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: ashutosh1919/report-curator@v0.0.5
+        uses: actions/checkout@v2
+      - uses: ./action
         with:
-          who-to-greet: 'Ashutosh'
+          who-to-greet: 'Shubham'
           auth_token: ${{ secrets.CURATOR_TOKEN }}
       # Use the output from the `hello` step
       - name: Get the output time
