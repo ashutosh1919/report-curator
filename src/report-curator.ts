@@ -9,8 +9,6 @@ import * as repOps from './helpers/repository';
 
 import { WebhookPayload } from '@actions/github/lib/interfaces';
 
-///import { ActionSecret } from './types';
-
 async function curate(){
     try {
         // `who-to-greet` input defined in action metadata file
