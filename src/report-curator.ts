@@ -7,8 +7,9 @@ import * as repOps from './helpers/repository';
 
 // import { getViewers, getCloners } from './helpers/traffic';
 
-import { WebhookPayload } from '@actions/github/lib/interfaces';
+import { WebhookPayload, PayloadRepository } from '@actions/github/lib/interfaces';
 
+import { ListBranchesResponse } from './types';
 async function curate(){
     try {
         // `who-to-greet` input defined in action metadata file
@@ -21,10 +22,8 @@ async function curate(){
         const payloadObj: WebhookPayload = JSON.parse(payload);
         // console.log(`The event payload: ${payload}`);
 
-        /*
         const repository: string = (payloadObj['repository'] as PayloadRepository)['name'];
         const owner = (payloadObj['repository'] as PayloadRepository)['owner']['name'] as string;
-        */
 
         let config = await getActionSecrets(authToken, payloadObj);
         /*
@@ -32,11 +31,12 @@ async function curate(){
             config.branches,
             config.branch);
         */
+
         let reportBranchConfig = repOps.getBranchConfig(
             config.branches,
-            reportBranch);
-        console.log(`Report config: ${reportBranchConfig}`);
-        if(Object.keys(reportBranchConfig).length === 0){
+            reportBranch) as ListBranchesResponse["data"][0];
+        console.log(`Report config: ${JSON.stringify(reportBranchConfig)}`);
+        if (Object.keys(reportBranchConfig).length === 0) {
             /*
               let res: any = await apiOps.createBranchRefV3(
                   config.octokit,
@@ -45,24 +45,23 @@ async function curate(){
                   reportBranch,
                   defaultBranchConfig["commit"]["sha"]);
             */
-              config = await getActionSecrets(authToken, payloadObj);
-              console.log(`config: ${config}`);
-              reportBranchConfig = await repOps.getBranchConfig(
-                  config.branches,
-                  reportBranch);
+            config = await getActionSecrets(authToken, payloadObj);
+            console.log(`config: ${config}`);
+            reportBranchConfig = repOps.getBranchConfig(
+                config.branches,
+                reportBranch) as ListBranchesResponse["data"][0];
         }
         console.log(reportBranchConfig);
 
         // let templateContent: string = getReportTemplateContent()
-        /*
-        let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
+        ///let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
+        await repOps.pushTemplateBlobContent(
             config.octokit,
             owner,
             repository,
             reportBranch,
             reportBranchConfig
         );
-        */
         // let blobResponse: any = await apiOps.createFileBlobV3(
         //     config.octokit,
         //     owner,

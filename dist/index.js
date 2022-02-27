@@ -576,10 +576,8 @@ function curate() {
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             const payloadObj = JSON.parse(payload);
             // console.log(`The event payload: ${payload}`);
-            /*
-            const repository: string = (payloadObj['repository'] as PayloadRepository)['name'];
-            const owner = (payloadObj['repository'] as PayloadRepository)['owner']['name'] as string;
-            */
+            const repository = payloadObj['repository']['name'];
+            const owner = payloadObj['repository']['owner']['name'];
             let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
             /*
             const defaultBranchConfig = await repOps.getBranchConfig(
@@ -587,7 +585,7 @@ function curate() {
                 config.branch);
             */
             let reportBranchConfig = repOps.getBranchConfig(config.branches, reportBranch);
-            console.log(`Report config: ${reportBranchConfig}`);
+            console.log(`Report config: ${JSON.stringify(reportBranchConfig)}`);
             if (Object.keys(reportBranchConfig).length === 0) {
                 /*
                   let res: any = await apiOps.createBranchRefV3(
@@ -599,19 +597,12 @@ function curate() {
                 */
                 config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
                 console.log(`config: ${config}`);
-                reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+                reportBranchConfig = repOps.getBranchConfig(config.branches, reportBranch);
             }
             console.log(reportBranchConfig);
             // let templateContent: string = getReportTemplateContent()
-            /*
-            let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
-                config.octokit,
-                owner,
-                repository,
-                reportBranch,
-                reportBranchConfig
-            );
-            */
+            ///let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
+            yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportBranchConfig);
             // let blobResponse: any = await apiOps.createFileBlobV3(
             //     config.octokit,
             //     owner,

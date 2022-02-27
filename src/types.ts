@@ -27,8 +27,6 @@ export type GR = OctokitResponse<ListBranchesResponse["data"]
     | TrafficClonesResponse["data"]
     | TrafficViewResponse["data"]>
 
-//export type GitBranchesReponse = OctokitResponse<ListBranchesResponse["data"]>
-
 type createTreeParams = Endpoints["POST /repos/{owner}/{repo}/git/trees"]["parameters"]
 export type TreeType = createTreeParams["tree"][0]
 //export type TreeType = Pick<createTreeParams, "tree">
