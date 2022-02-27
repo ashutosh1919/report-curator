@@ -1,5 +1,15 @@
 import fetch from 'node-fetch'; 
-import { v3Headers, templateUrl } from './constants';
+import { Octokit } from 'octokit';
+
+import { templateUrl } from './constants';
+import {
+    TreeType,
+    CreateTreeResponse,
+    CreateCommitV3Response,
+    UpdateReferenceV3Response,
+    CreateBranchRefV3Response,
+    GitBranchesV3Response
+ } from '../types';
 
 export async function getTemplateFileText(): Promise<string> {
     const template = await fetch(templateUrl);
@@ -10,37 +20,41 @@ export async function getTextFromFileUrl(fileUrl: string): Promise<string> {
     const fileText = await fetch(fileUrl);
     return await fileText.text();
 }
-
-export async function getGitResponseV3(octokit: any, url: string, headers: object = v3Headers): Promise<any>{
+/*
+export async function getGitResponseV3(octokit: Octokit, url: string, headers: object = v3Headers): Promise<any>{
     return await octokit.request(url, {
         header: JSON.stringify(headers)
     });
 }
+*/
 
-export function getGitBranchesV3(
-        octokit: any,
-        owner: string,
-        repository: string): Promise<any> {
-    return getGitResponseV3(octokit,
-        `GET /repos/${owner}/${repository}/branches`);
+export async function getGitBranchesV3(
+    octokit: Octokit,
+    owner: string,
+    repository: string): Promise<GitBranchesV3Response> {
+    return await octokit.request(
+        `GET /repos/${owner}/${repository}/branches`
+    )
 }
 
+/*
 export function getBranchRefV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         branch: string): Promise<any> {
     return getGitResponseV3(octokit,
         `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
+*/
 
 export async function createBranchRefV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         refBranch: string,
         baseSHA: string
-        ): Promise<any> {
+        ): Promise<CreateBranchRefV3Response> {
     return await octokit.request(
         `POST /repos/${owner}/${repository}/git/refs`,
         {
@@ -49,9 +63,9 @@ export async function createBranchRefV3(
         }
     );
 }
-
+/*
 export async function createFileBlobV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         content: string,
@@ -64,9 +78,12 @@ export async function createFileBlobV3(
         }
     )
 }
+*/
+
+/*
 
 export async function putFileContentInBranchV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         path: string,
@@ -85,9 +102,11 @@ export async function putFileContentInBranchV3(
         }
     );
 }
+*/
 
+/*
 export async function getAllFilesFromBranchV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         ref: string): Promise<any> {
@@ -100,9 +119,11 @@ export async function getAllFilesFromBranchV3(
         }
     );
 }
+*/
 
+/*
 export async function deleteFileFromBranchV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         path: string,
@@ -121,12 +142,13 @@ export async function deleteFileFromBranchV3(
         }
     );
 }
+*/
 
 export async function createFileTreeV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
-        tree: any): Promise<any> {
+        tree: TreeType[]): Promise<CreateTreeResponse> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/trees`,
         {
@@ -138,12 +160,12 @@ export async function createFileTreeV3(
 }
 
 export async function createCommitV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         commitMessage: string,
         treeSHA: string,
-        parents: string[] = []): Promise<any> {
+        parents: string[] = []): Promise<CreateCommitV3Response> {
     return await octokit.request(
         `POST /repos/{owner}/{repo}/git/commits`,
         {
@@ -157,12 +179,12 @@ export async function createCommitV3(
 }
 
 export async function updateReferenceV3(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         branch: string,
         sha: string,
-        force: boolean): Promise<any> {
+        force: boolean): Promise<UpdateReferenceV3Response> {
     return await octokit.request(
         `PATCH /repos/{owner}/{repo}/git/refs/heads/${branch}`,
         {

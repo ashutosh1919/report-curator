@@ -1,42 +1,52 @@
 import * as core from '@actions/core';
-import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
 import { getActionSecrets } from './helpers/secrets';
 import * as repOps from './helpers/repository';
-import * as apiOps from './helpers/api';
+//import * as apiOps from './helpers/api';
+
 // import { getViewers, getCloners } from './helpers/traffic';
+
+import { WebhookPayload } from '@actions/github/lib/interfaces';
+
+///import { ActionSecret } from './types';
 
 async function curate(){
     try {
         // `who-to-greet` input defined in action metadata file
-        const nameToGreet: string = core.getInput('who-to-greet');
+        ///const nameToGreet: string = core.getInput('who-to-greet');
         const authToken: string = core.getInput('auth_token');
         const reportBranch: string = core.getInput('report_branch');
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
-        const payloadObj: any = JSON.parse(payload);
+        const payloadObj: WebhookPayload = JSON.parse(payload);
         // console.log(`The event payload: ${payload}`);
 
-        const repository: string = payloadObj['repository']['name'];
-        const owner: string = payloadObj['repository']['owner']['name'];
+        /*
+        const repository: string = (payloadObj['repository'] as PayloadRepository)['name'];
+        const owner = (payloadObj['repository'] as PayloadRepository)['owner']['name'] as string;
+        */
 
-        let config: any = await getActionSecrets(authToken, payloadObj);
-        let defaultBranchConfig: any = await repOps.getBranchConfig(
+        let config = await getActionSecrets(authToken, payloadObj);
+        /*
+        const defaultBranchConfig = await repOps.getBranchConfig(
             config.branches,
             config.branch);
-        let reportBranchConfig: any = await repOps.getBranchConfig(
+        */
+        let reportBranchConfig = repOps.getBranchConfig(
             config.branches,
             reportBranch);
         console.log(`Report config: ${reportBranchConfig}`);
         if(Object.keys(reportBranchConfig).length === 0){
+            /*
               let res: any = await apiOps.createBranchRefV3(
                   config.octokit,
                   owner,
                   repository,
                   reportBranch,
                   defaultBranchConfig["commit"]["sha"]);
+            */
               config = await getActionSecrets(authToken, payloadObj);
               console.log(`config: ${config}`);
               reportBranchConfig = await repOps.getBranchConfig(
@@ -46,6 +56,7 @@ async function curate(){
         console.log(reportBranchConfig);
 
         // let templateContent: string = getReportTemplateContent()
+        /*
         let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
             config.octokit,
             owner,
@@ -53,6 +64,7 @@ async function curate(){
             reportBranch,
             reportBranchConfig
         );
+        */
         // let blobResponse: any = await apiOps.createFileBlobV3(
         //     config.octokit,
         //     owner,
@@ -74,8 +86,8 @@ async function curate(){
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
-      } catch (error: any) {
-        core.setFailed(error.message);
+      } catch (error: unknown) {
+        core.setFailed((error as Error).message);
       }
       
 }
