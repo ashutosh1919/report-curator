@@ -1,11 +1,18 @@
-import * as apiOps from './api';
+import { Octokit } from 'octokit';
 
-export async function getViewers(octokit: any, owner: string, repository: string): Promise<any> {
-    return await apiOps.getGitResponseV3(octokit,
-        `GET /repos/${owner}/${repository}/traffic/views`);
+import {
+    ViewersResponse,
+    ClonersResponse
+} from '../types'
+
+export async function getViewers(octokit: Octokit, owner: string, repository: string): Promise<ViewersResponse> {
+    return await octokit.request(
+        `GET /repos/${owner}/${repository}/traffic/views`
+    )
 }
 
-export async function getCloners(octokit: any, owner: string, repository: string): Promise<any> {
-    return await apiOps.getGitResponseV3(octokit,
-        `GET /repos/${owner}/${repository}/traffic/clones`);
+export async function getCloners(octokit: Octokit, owner: string, repository: string): Promise<ClonersResponse> {
+    return await octokit.request(
+        `GET /repos/${owner}/${repository}/traffic/clones`
+    )
 }

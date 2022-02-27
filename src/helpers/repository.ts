@@ -1,40 +1,50 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import * as apiOps from './api';
 import * as trafficOps from './traffic';
 import { template, dataSchema, dataFileName } from './constants';
+import { 
+    TreeType,
+    JSONType, 
+    ListBranchesResponse,
+    ViewersResponse,
+    ClonersResponse,
+    Metrics,
+    UpdateReferenceV3Response
+} from '../types';
+import { WebhookPayload, PayloadRepository } from '@actions/github/lib/interfaces';
+import { Octokit } from 'octokit';
 
-export function cloneJSON(jsonObj: any): any {
+export function cloneJSON(jsonObj: JSONType): ListBranchesResponse["data"] | JSONType {
     return JSON.parse(JSON.stringify(jsonObj));
 }
 
-export function getCurrentBranchName(payload: any): string {
-    return payload["repository"]["default_branch"];
+export function getCurrentBranchName(payload: WebhookPayload): string {
+    return (payload["repository"] as PayloadRepository)["default_branch"];
 }
 
-export function getRepositoryOwner(payload: any): string {
-    return payload["repository"]["owner"]["name"];
+export function getRepositoryOwner(payload: WebhookPayload): string {
+    return (payload["repository"] as PayloadRepository)["owner"]["name"] as string;
 }
 
-export function getRepositoryName(payload: any): string {
-    return payload["repository"]["name"];
+export function getRepositoryName(payload: WebhookPayload): string {
+    return (payload["repository"] as PayloadRepository)["name"];
 }
 
-export function getBranchConfig(branchConfig: any, branch: string): any {
-    for(let i = 0; i < branchConfig.length; i++) {
-        if(branchConfig[i]["name"] === branch) {
-            return cloneJSON(branchConfig[i]);
+export function getBranchConfig(branchConfig: ListBranchesResponse["data"], branch: string)
+    : ListBranchesResponse["data"][0] | Record<string, never> {
+    for (let i = 0; i < branchConfig.length; i++) {
+        if (branchConfig[i]["name"] === branch) {
+            return (cloneJSON(branchConfig[i]) as ListBranchesResponse["data"][0]);
         }
     }
     return {};
 }
 
 async function createBlobFromFileUrl(
-        fileUrl: string,
-        filePath: string,
-        mode: string = '100644',
-        type: string = 'blob'): Promise<any> {
-    let content: string = await apiOps.getTextFromFileUrl(fileUrl);
+    fileUrl: string,
+    filePath: string,
+    mode: TreeType["mode"] = '100644',
+    type: TreeType["type"] = 'blob'): Promise<TreeType> {
+    const content: string = await apiOps.getTextFromFileUrl(fileUrl);
     return {
         path: filePath,
         mode: mode,
@@ -43,15 +53,15 @@ async function createBlobFromFileUrl(
     }
 }
 
-function convertTimeStampDataToPlotData(data: any): any {
-    let x: any = [];
-    let yCount: any = [];
-    let yUniques: any = [];
+function convertTimeStampDataToPlotData(data: ViewersResponse["data"]["views"] | ClonersResponse["data"]["clones"]): Metrics {
+    const x: string[] = [];
+    const yCount: number[] = [];
+    const yUniques: number[] = [];
     for(let i = 0; i < data.length; i++){
-        let date: any = data[i]["timestamp"].split('T')[0].split('-');
-        let ts: string = date[1]+'/'+date[2];
-        let count: number = +data[i]["count"];
-        let uniques: number = +data[i]["uniques"];
+        const date: string[] = data[i]["timestamp"].split('T')[0].split('-');
+        const ts: string = date[1]+'/'+date[2];
+        const count: number = +data[i]["count"];
+        const uniques: number = +data[i]["uniques"];
         x.push(ts);
         yCount.push(count);
         yUniques.push(uniques);
@@ -64,25 +74,25 @@ function convertTimeStampDataToPlotData(data: any): any {
 }
 
 async function generateDataBlobFromSchema(
-        octokit: any,
-        owner: string,
-        repository: string,
-        mode: string = '100644',
-        type: string = 'blob'): Promise<any> {
-    let viewsData = await trafficOps.getViewers(
+    octokit: Octokit,
+    owner: string,
+    repository: string,
+    mode: TreeType["mode"] = '100644',
+    type: TreeType["type"] = 'blob'): Promise<TreeType> {
+    const viewsData = await trafficOps.getViewers(
         octokit,
         owner,
         repository
     );
-    let clonesData = await trafficOps.getCloners(
+    const clonesData = await trafficOps.getCloners(
         octokit,
         owner,
         repository
     );
-    let data: any = JSON.parse(JSON.stringify(dataSchema));
+    const data: { views: Metrics, clones: Metrics } = JSON.parse(JSON.stringify(dataSchema));
     data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
     data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
-    let content: any = `let data = ${JSON.stringify(data)};`
+    const content = `let data = ${JSON.stringify(data)};`
     return {
         path: dataFileName,
         mode: mode,
@@ -92,22 +102,22 @@ async function generateDataBlobFromSchema(
 }
 
 async function createFileTreeFromTemplate(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
-        repository: string): Promise<any> {
-    let tree: any = [];
+        repository: string): Promise<TreeType[]> {
+    const tree: TreeType[] = [];
 
     for(let i = 0; i < template.html.length; i++){
-        let blob = await createBlobFromFileUrl(template.html[i].url, template.html[i].name);
+        const blob = await createBlobFromFileUrl(template.html[i].url, template.html[i].name);
         tree.push(blob);
     }
 
     for(let i = 0; i < template.css.length; i++){
-        let blob = await createBlobFromFileUrl(template.css[i].url, template.css[i].name);
+        const blob = await createBlobFromFileUrl(template.css[i].url, template.css[i].name);
         tree.push(blob);
     }
     for(let i = 0; i < template.js.length; i++){
-        let blob = await createBlobFromFileUrl(template.js[i].url, template.js[i].name);
+        const blob = await createBlobFromFileUrl(template.js[i].url, template.js[i].name);
         tree.push(blob);
     }
     tree.push(
@@ -121,26 +131,26 @@ async function createFileTreeFromTemplate(
 }
 
 export async function pushTemplateBlobContent(
-        octokit: any,
+        octokit: Octokit,
         owner: string,
         repository: string,
         reportBranch: string,
-        reportBranchConfig: any): Promise<any> {
+        reportBranchConfig: ListBranchesResponse["data"][0]): Promise<UpdateReferenceV3Response> {
     // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
     // console.log(content);
     console.log(owner, repository);
-    let contentTree = await createFileTreeFromTemplate(
+    const contentTree = await createFileTreeFromTemplate(
         octokit,
         owner,
         repository
     );
-    let fileTree: any = await apiOps.createFileTreeV3(
+    const fileTree = await apiOps.createFileTreeV3(
         octokit,
         owner,
         repository,
         contentTree
     );
-    let commitFile = await apiOps.createCommitV3(
+    const commitFile = await apiOps.createCommitV3(
         octokit,
         owner,
         repository,
