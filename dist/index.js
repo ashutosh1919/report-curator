@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.updateReferenceV3 = exports.createCommitV3 = exports.createFileTreeV3 = exports.deleteFileFromBranchV3 = exports.getAllFilesFromBranchV3 = exports.putFileContentInBranchV3 = exports.createFileBlobV3 = exports.createBranchRefV3 = exports.getBranchRefV3 = exports.getGitBranchesV3 = exports.getGitResponseV3 = exports.getTextFromFileUrl = exports.getTemplateFileText = void 0;
+exports.updateReferenceV3 = exports.createCommitV3 = exports.createFileTreeV3 = exports.createBranchRefV3 = exports.getGitBranchesV3 = exports.getTextFromFileUrl = exports.getTemplateFileText = void 0;
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const constants_1 = __nccwpck_require__(1439);
 function getTemplateFileText() {
@@ -36,22 +36,29 @@ function getTextFromFileUrl(fileUrl) {
     });
 }
 exports.getTextFromFileUrl = getTextFromFileUrl;
-function getGitResponseV3(octokit, url, headers = constants_1.v3Headers) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(url, {
-            header: JSON.stringify(headers)
-        });
+/*
+export async function getGitResponseV3(octokit: Octokit, url: string, headers: object = v3Headers): Promise<any>{
+    return await octokit.request(url, {
+        header: JSON.stringify(headers)
     });
 }
-exports.getGitResponseV3 = getGitResponseV3;
+*/
 function getGitBranchesV3(octokit, owner, repository) {
-    return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/branches`);
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield octokit.request(`GET /repos/${owner}/${repository}/branches`);
+    });
 }
 exports.getGitBranchesV3 = getGitBranchesV3;
-function getBranchRefV3(octokit, owner, repository, branch) {
-    return getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
+/*
+export function getBranchRefV3(
+        octokit: Octokit,
+        owner: string,
+        repository: string,
+        branch: string): Promise<any> {
+    return getGitResponseV3(octokit,
+        `GET /repos/${owner}/${repository}/git/ref/heads/${branch}`);
 }
-exports.getBranchRefV3 = getBranchRefV3;
+*/
 function createBranchRefV3(octokit, owner, repository, refBranch, baseSHA) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/${owner}/${repository}/git/refs`, {
@@ -61,51 +68,83 @@ function createBranchRefV3(octokit, owner, repository, refBranch, baseSHA) {
     });
 }
 exports.createBranchRefV3 = createBranchRefV3;
-function createFileBlobV3(octokit, owner, repository, content, encoding = 'utf8') {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`POST /repos/${owner}/${repository}/git/blobs`, {
+/*
+export async function createFileBlobV3(
+        octokit: Octokit,
+        owner: string,
+        repository: string,
+        content: string,
+        encoding: string = 'utf8'): Promise<any> {
+    return await octokit.request(
+        `POST /repos/${owner}/${repository}/git/blobs`,
+        {
             content: content,
             encoding: encoding
-        });
-    });
+        }
+    )
 }
-exports.createFileBlobV3 = createFileBlobV3;
-function putFileContentInBranchV3(octokit, owner, repository, path, content, commitMessgae, branch) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`PUT /repos/{owner}/{repo}/contents/{path}`, {
+*/
+/*
+
+export async function putFileContentInBranchV3(
+        octokit: Octokit,
+        owner: string,
+        repository: string,
+        path: string,
+        content: string,
+        commitMessgae: string,
+        branch: string): Promise<any> {
+    return await octokit.request(
+        `PUT /repos/{owner}/{repo}/contents/{path}`,
+        {
             owner: owner,
             repo: repository,
             path: path,
             content: content,
             message: commitMessgae,
             branch: branch
-        });
-    });
+        }
+    );
 }
-exports.putFileContentInBranchV3 = putFileContentInBranchV3;
-function getAllFilesFromBranchV3(octokit, owner, repository, ref) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`GET /repos/{owner}/{repo}/contents`, {
+*/
+/*
+export async function getAllFilesFromBranchV3(
+        octokit: Octokit,
+        owner: string,
+        repository: string,
+        ref: string): Promise<any> {
+    return await octokit.request(
+        `GET /repos/{owner}/{repo}/contents`,
+        {
             owner: owner,
             repo: repository,
             ref: ref
-        });
-    });
+        }
+    );
 }
-exports.getAllFilesFromBranchV3 = getAllFilesFromBranchV3;
-function deleteFileFromBranchV3(octokit, owner, repository, path, sha, commitMessgae, branch) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield octokit.request(`DELETE /repos/{owner}/{repo}/contents/{path}`, {
+*/
+/*
+export async function deleteFileFromBranchV3(
+        octokit: Octokit,
+        owner: string,
+        repository: string,
+        path: string,
+        sha: string,
+        commitMessgae: string,
+        branch: string): Promise<any> {
+    return await octokit.request(
+        `DELETE /repos/{owner}/{repo}/contents/{path}`,
+        {
             owner: owner,
             repo: repository,
             path: path,
             sha: sha,
             message: commitMessgae,
             branch: branch
-        });
-    });
+        }
+    );
 }
-exports.deleteFileFromBranchV3 = deleteFileFromBranchV3;
+*/
 function createFileTreeV3(octokit, owner, repository, tree) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
@@ -295,7 +334,7 @@ function getBranchConfig(branchConfig, branch) {
 exports.getBranchConfig = getBranchConfig;
 function createBlobFromFileUrl(fileUrl, filePath, mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
-        let content = yield apiOps.getTextFromFileUrl(fileUrl);
+        const content = yield apiOps.getTextFromFileUrl(fileUrl);
         return {
             path: filePath,
             mode: mode,
@@ -305,14 +344,14 @@ function createBlobFromFileUrl(fileUrl, filePath, mode = '100644', type = 'blob'
     });
 }
 function convertTimeStampDataToPlotData(data) {
-    let x = [];
-    let yCount = [];
-    let yUniques = [];
+    const x = [];
+    const yCount = [];
+    const yUniques = [];
     for (let i = 0; i < data.length; i++) {
-        let date = data[i]["timestamp"].split('T')[0].split('-');
-        let ts = date[1] + '/' + date[2];
-        let count = +data[i]["count"];
-        let uniques = +data[i]["uniques"];
+        const date = data[i]["timestamp"].split('T')[0].split('-');
+        const ts = date[1] + '/' + date[2];
+        const count = +data[i]["count"];
+        const uniques = +data[i]["uniques"];
         x.push(ts);
         yCount.push(count);
         yUniques.push(uniques);
@@ -325,12 +364,12 @@ function convertTimeStampDataToPlotData(data) {
 }
 function generateDataBlobFromSchema(octokit, owner, repository, mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
-        let viewsData = yield trafficOps.getViewers(octokit, owner, repository);
-        let clonesData = yield trafficOps.getCloners(octokit, owner, repository);
-        let data = JSON.parse(JSON.stringify(constants_1.dataSchema));
+        const viewsData = yield trafficOps.getViewers(octokit, owner, repository);
+        const clonesData = yield trafficOps.getCloners(octokit, owner, repository);
+        const data = JSON.parse(JSON.stringify(constants_1.dataSchema));
         data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
         data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
-        let content = `let data = ${JSON.stringify(data)};`;
+        const content = `let data = ${JSON.stringify(data)};`;
         return {
             path: constants_1.dataFileName,
             mode: mode,
@@ -341,17 +380,17 @@ function generateDataBlobFromSchema(octokit, owner, repository, mode = '100644',
 }
 function createFileTreeFromTemplate(octokit, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
-        let tree = [];
+        const tree = [];
         for (let i = 0; i < constants_1.template.html.length; i++) {
-            let blob = yield createBlobFromFileUrl(constants_1.template.html[i].url, constants_1.template.html[i].name);
+            const blob = yield createBlobFromFileUrl(constants_1.template.html[i].url, constants_1.template.html[i].name);
             tree.push(blob);
         }
         for (let i = 0; i < constants_1.template.css.length; i++) {
-            let blob = yield createBlobFromFileUrl(constants_1.template.css[i].url, constants_1.template.css[i].name);
+            const blob = yield createBlobFromFileUrl(constants_1.template.css[i].url, constants_1.template.css[i].name);
             tree.push(blob);
         }
         for (let i = 0; i < constants_1.template.js.length; i++) {
-            let blob = yield createBlobFromFileUrl(constants_1.template.js[i].url, constants_1.template.js[i].name);
+            const blob = yield createBlobFromFileUrl(constants_1.template.js[i].url, constants_1.template.js[i].name);
             tree.push(blob);
         }
         tree.push(yield generateDataBlobFromSchema(octokit, owner, repository));
@@ -363,9 +402,9 @@ function pushTemplateBlobContent(octokit, owner, repository, reportBranch, repor
         // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
         // console.log(content);
         console.log(owner, repository);
-        let contentTree = yield createFileTreeFromTemplate(octokit, owner, repository);
-        let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, contentTree);
-        let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha, [reportBranchConfig.commit.sha]);
+        const contentTree = yield createFileTreeFromTemplate(octokit, owner, repository);
+        const fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, contentTree);
+        const commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha, [reportBranchConfig.commit.sha]);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, true);
     });
 }
@@ -437,11 +476,11 @@ function getOctokitContext(authToken) {
 }
 function getActionSecrets(authToken, payload) {
     return __awaiter(this, void 0, void 0, function* () {
-        let owner = repOps.getRepositoryOwner(payload);
-        let repository = repOps.getRepositoryName(payload);
-        let branch = repOps.getCurrentBranchName(payload);
-        let octokit = yield getOctokitContext(authToken);
-        let branches = yield apiOps.getGitBranchesV3(octokit, owner, repository);
+        const owner = repOps.getRepositoryOwner(payload);
+        const repository = repOps.getRepositoryName(payload);
+        const branch = repOps.getCurrentBranchName(payload);
+        const octokit = getOctokitContext(authToken);
+        const branches = yield apiOps.getGitBranchesV3(octokit, owner, repository);
         return {
             octokit: octokit,
             owner: owner,
@@ -457,29 +496,10 @@ exports.getActionSecrets = getActionSecrets;
 /***/ }),
 
 /***/ 9216:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -491,16 +511,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getCloners = exports.getViewers = void 0;
-const apiOps = __importStar(__nccwpck_require__(1035));
 function getViewers(octokit, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield apiOps.getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/traffic/views`);
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/views`);
     });
 }
 exports.getViewers = getViewers;
 function getCloners(octokit, owner, repository) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield apiOps.getGitResponseV3(octokit, `GET /repos/${owner}/${repository}/traffic/clones`);
+        return yield octokit.request(`GET /repos/${owner}/${repository}/traffic/clones`);
     });
 }
 exports.getCloners = getCloners;
@@ -546,34 +565,54 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const secrets_1 = __nccwpck_require__(5157);
 const repOps = __importStar(__nccwpck_require__(3642));
-const apiOps = __importStar(__nccwpck_require__(1035));
-// import { getViewers, getCloners } from './helpers/traffic';
+///import { ActionSecret } from './types';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // `who-to-greet` input defined in action metadata file
-            const nameToGreet = core.getInput('who-to-greet');
+            ///const nameToGreet: string = core.getInput('who-to-greet');
             const authToken = core.getInput('auth_token');
             const reportBranch = core.getInput('report_branch');
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             const payloadObj = JSON.parse(payload);
             // console.log(`The event payload: ${payload}`);
-            const repository = payloadObj['repository']['name'];
-            const owner = payloadObj['repository']['owner']['name'];
+            /*
+            const repository: string = (payloadObj['repository'] as PayloadRepository)['name'];
+            const owner = (payloadObj['repository'] as PayloadRepository)['owner']['name'] as string;
+            */
             let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
-            let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+            /*
+            const defaultBranchConfig = await repOps.getBranchConfig(
+                config.branches,
+                config.branch);
+            */
+            let reportBranchConfig = repOps.getBranchConfig(config.branches, reportBranch);
             console.log(`Report config: ${reportBranchConfig}`);
             if (Object.keys(reportBranchConfig).length === 0) {
-                let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
+                /*
+                  let res: any = await apiOps.createBranchRefV3(
+                      config.octokit,
+                      owner,
+                      repository,
+                      reportBranch,
+                      defaultBranchConfig["commit"]["sha"]);
+                */
                 config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
                 console.log(`config: ${config}`);
                 reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
             }
             console.log(reportBranchConfig);
             // let templateContent: string = getReportTemplateContent()
-            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportBranchConfig);
+            /*
+            let pushedBlobRes: any = await repOps.pushTemplateBlobContent(
+                config.octokit,
+                owner,
+                repository,
+                reportBranch,
+                reportBranchConfig
+            );
+            */
             // let blobResponse: any = await apiOps.createFileBlobV3(
             //     config.octokit,
             //     owner,
