@@ -565,7 +565,6 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const secrets_1 = __nccwpck_require__(5157);
 const repOps = __importStar(__nccwpck_require__(3642));
-///import { ActionSecret } from './types';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
