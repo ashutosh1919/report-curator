@@ -89,6 +89,7 @@ async function generateDataBlobFromSchema(
     data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
     data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
     let content: any = `let data = ${JSON.stringify(data)};`
+    console.log(data, reportTheme);
     return {
         path: dataFileName,
         mode: mode,
