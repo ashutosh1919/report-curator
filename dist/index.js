@@ -1,6 +1,14 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 648:
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('{"slate":{"primary":"#475569","secondary":"#94a3b8","background":"#f8fafc"},"gray":{"primary":"#4b5563","secondary":"#9ca3af","background":"#f9fafb"},"zinc":{"primary":"#52525b","secondary":"#a1a1aa","background":"#fafafa"},"neutral":{"primary":"#525252","secondary":"#a3a3a3","background":"#fafafa"},"stone":{"primary":"#57534e","secondary":"#a8a29e","background":"#fafaf9"},"red":{"primary":"#dc2626","secondary":"#f87171","background":"#fef2f2"},"orange":{"primary":"#ea580c","secondary":"#fb923c","background":"#fff7ed"},"amber":{"primary":"#d97706","secondary":"#fbbf24","background":"#fffbeb"},"yellow":{"primary":"#ca8a04","secondary":"#facc15","background":"#fefce8"},"lime":{"primary":"#65a30d","secondary":"#a3e635","background":"#f7fee7"},"green":{"primary":"#16a34a","secondary":"#4ade80","background":"#f0fdf4"},"emerald":{"primary":"#059669","secondary":"#34d399","background":"#ecfdf5"},"teal":{"primary":"#0d9488","secondary":"#2dd4bf","background":"#f0fdfa"},"cyan":{"primary":"#0891b2","secondary":"#22d3ee","background":"#ecfeff"},"sky":{"primary":"#0284c7","secondary":"#38bdf8","background":"#f0f9ff"},"blue":{"primary":"#2563eb","secondary":"#60a5fa","background":"#eff6ff"},"indigo":{"primary":"#4f46e5","secondary":"#818cf8","background":"#eef2ff"},"violet":{"primary":"#7c3aed","secondary":"#a78bfa","background":"#f5f3ff"},"purple":{"primary":"#9333ea","secondary":"#c084fc","background":"#faf5ff"},"fuchsia":{"primary":"#c026d3","secondary":"#e879f9","background":"#fdf4ff"},"pink":{"primary":"#db2777","secondary":"#f472b6","background":"#fdf2f8"},"rose":{"primary":"#e11d48","secondary":"#fb7185","background":"#fff1f2"}}');
+
+/***/ }),
+
 /***/ 1035:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -149,7 +157,9 @@ exports.updateReferenceV3 = updateReferenceV3;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.dataSchema = exports.dataFileName = exports.templateUrl = exports.template = exports.v3Headers = void 0;
+exports.dataSchema = exports.dataFileName = exports.templateUrl = exports.template = exports.v3Headers = exports.defaultTheme = void 0;
+exports.defaultTheme = "emerald";
+// export themes;
 exports.v3Headers = {
     "access-control-allow-origin": "*",
     "accept": "application/vnd.github.v3+json"
@@ -185,6 +195,11 @@ exports.template = {
 exports.templateUrl = "https://raw.githubusercontent.com/ashutosh1919/report-curator/main/templates/index.html";
 exports.dataFileName = 'data.js';
 exports.dataSchema = {
+    theme: {
+        primary: "#059669",
+        secondary: "#34d399",
+        background: "#ecfdf5"
+    },
     views: {
         dates: [
             "11/18", "11/19", "11/20",
@@ -230,6 +245,41 @@ exports.dataSchema = {
 
 /***/ }),
 
+/***/ 1026:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.logInput = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+function logInput(content) {
+    core.info(content);
+}
+exports.logInput = logInput;
+
+
+/***/ }),
+
 /***/ 3642:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -263,11 +313,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pushTemplateBlobContent = exports.getBranchConfig = exports.getRepositoryName = exports.getRepositoryOwner = exports.getCurrentBranchName = exports.cloneJSON = void 0;
 const apiOps = __importStar(__nccwpck_require__(1035));
 const trafficOps = __importStar(__nccwpck_require__(9216));
 const constants_1 = __nccwpck_require__(1439);
+const themes_json_1 = __importDefault(__nccwpck_require__(648));
 function cloneJSON(jsonObj) {
     return JSON.parse(JSON.stringify(jsonObj));
 }
@@ -323,14 +377,19 @@ function convertTimeStampDataToPlotData(data) {
         uniques: yUniques
     };
 }
-function generateDataBlobFromSchema(octokit, owner, repository, mode = '100644', type = 'blob') {
+function generateDataBlobFromSchema(octokit, owner, repository, reportTheme, mode = '100644', type = 'blob') {
     return __awaiter(this, void 0, void 0, function* () {
         let viewsData = yield trafficOps.getViewers(octokit, owner, repository);
         let clonesData = yield trafficOps.getCloners(octokit, owner, repository);
         let data = JSON.parse(JSON.stringify(constants_1.dataSchema));
+        if (!(reportTheme in themes_json_1.default)) {
+            reportTheme = constants_1.defaultTheme;
+        }
+        data["theme"] = themes_json_1.default[reportTheme];
         data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
         data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
         let content = `let data = ${JSON.stringify(data)};`;
+        console.log(data, reportTheme);
         return {
             path: constants_1.dataFileName,
             mode: mode,
@@ -339,7 +398,7 @@ function generateDataBlobFromSchema(octokit, owner, repository, mode = '100644',
         };
     });
 }
-function createFileTreeFromTemplate(octokit, owner, repository) {
+function createFileTreeFromTemplate(octokit, owner, repository, reportTheme) {
     return __awaiter(this, void 0, void 0, function* () {
         let tree = [];
         for (let i = 0; i < constants_1.template.html.length; i++) {
@@ -354,29 +413,34 @@ function createFileTreeFromTemplate(octokit, owner, repository) {
             let blob = yield createBlobFromFileUrl(constants_1.template.js[i].url, constants_1.template.js[i].name);
             tree.push(blob);
         }
-        tree.push(yield generateDataBlobFromSchema(octokit, owner, repository));
+        tree.push(yield generateDataBlobFromSchema(octokit, owner, repository, reportTheme));
         return tree;
     });
 }
-function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportBranchConfig) {
+function pushTemplateBlobContent(octokit, owner, repository, reportBranch, reportTheme, reportBranchConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
         // console.log(content);
+        // test comment
         console.log(owner, repository);
-        let contentTree = yield createFileTreeFromTemplate(octokit, owner, repository);
+        let contentTree = yield createFileTreeFromTemplate(octokit, owner, repository, reportTheme);
+        console.log(`Creating tree from template succeeded.`);
         let fileTree = yield apiOps.createFileTreeV3(octokit, owner, repository, contentTree);
+        console.log(`Storing file tree succeeded.`);
         let commitFile = yield apiOps.createCommitV3(octokit, owner, repository, 'Updated Report using report-curator', fileTree.data.sha, [reportBranchConfig.commit.sha]);
+        console.log(`Creating commit succeeded.`);
         return yield apiOps.updateReferenceV3(octokit, owner, repository, reportBranch, commitFile.data.sha, true);
     });
 }
 exports.pushTemplateBlobContent = pushTemplateBlobContent;
+// console.log(themes);
 // import { Octokit } from 'octokit';
 // let octokit = new Octokit({ auth: '' });
-// pushTemplateBlobContent(octokit, 'ashutosh1919', 'report-curator', 'report', {
+// pushTemplateBlobContent(octokit, 'ashutosh1919', 'report-curator', 'report', 'rose', {
 //     name: 'report',
 //     commit: {
-//       sha: '0f85fc4aaf05d1857e2c02909573847912a56d2a',
-//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/0f85fc4aaf05d1857e2c02909573847912a56d2a'
+//       sha: '5dffe72bee501842366c662aab06896266e8e465',
+//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/5dffe72bee501842366c662aab06896266e8e465'
 //     },
 //     protected: false,
 //     protection: {
@@ -545,56 +609,58 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const secrets_1 = __nccwpck_require__(5157);
+const logger_1 = __nccwpck_require__(1026);
 const repOps = __importStar(__nccwpck_require__(3642));
 const apiOps = __importStar(__nccwpck_require__(1035));
 // import { getViewers, getCloners } from './helpers/traffic';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // `who-to-greet` input defined in action metadata file
-            const nameToGreet = core.getInput('who-to-greet');
-            const authToken = core.getInput('auth_token');
-            const reportBranch = core.getInput('report_branch');
-            // Get the JSON webhook payload for the event that triggered the workflow
-            const payload = JSON.stringify(github.context.payload, undefined, 2);
-            const payloadObj = JSON.parse(payload);
-            // console.log(`The event payload: ${payload}`);
-            const repository = payloadObj['repository']['name'];
-            const owner = payloadObj['repository']['owner']['name'];
-            let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
-            let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
-            console.log(`Report config: ${reportBranchConfig}`);
-            if (Object.keys(reportBranchConfig).length === 0) {
-                let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
-                config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-                console.log(`config: ${config}`);
-                reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
-            }
-            console.log(reportBranchConfig);
-            // let templateContent: string = getReportTemplateContent()
-            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportBranchConfig);
-            // let blobResponse: any = await apiOps.createFileBlobV3(
-            //     config.octokit,
-            //     owner,
-            //     repository,
-            //     templateContent
-            // );
-            // console.log(JSON.stringify(config.branches));
-            // getViewers(authToken, owner, repository)
-            //   .then(res => JSON.stringify(res))
-            //   .then(res => console.log(res))
-            //   .catch(error => core.setFailed(JSON.stringify(error)));
-            // getCloners(authToken, owner, repository)
-            //   .then(res => JSON.stringify(res))
-            //   .then(res => console.log(res))
-            //   .catch(error => core.setFailed(JSON.stringify(error)));
-            const time = (new Date()).toTimeString();
-            core.setOutput("time", time);
+        // try {
+        // `who-to-greet` input defined in action metadata file
+        const nameToGreet = core.getInput('who-to-greet');
+        const authToken = core.getInput('auth_token');
+        const reportBranch = core.getInput('report_branch');
+        const reportTheme = core.getInput('report_theme').toLowerCase();
+        (0, logger_1.logInput)(`Theme selected: ${reportTheme}`);
+        // Get the JSON webhook payload for the event that triggered the workflow
+        const payload = JSON.stringify(github.context.payload, undefined, 2);
+        const payloadObj = JSON.parse(payload);
+        // console.log(`The event payload: ${payload}`);
+        const repository = payloadObj['repository']['name'];
+        const owner = payloadObj['repository']['owner']['name'];
+        let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+        let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
+        let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+        console.log(`Report config: ${reportBranchConfig}`);
+        if (Object.keys(reportBranchConfig).length === 0) {
+            let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
+            config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+            console.log(`config: ${config}`);
+            reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
         }
-        catch (error) {
-            core.setFailed(error.message);
-        }
+        console.log(reportBranchConfig);
+        // let templateContent: string = getReportTemplateContent()
+        let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportTheme, reportBranchConfig);
+        // let blobResponse: any = await apiOps.createFileBlobV3(
+        //     config.octokit,
+        //     owner,
+        //     repository,
+        //     templateContent
+        // );
+        // console.log(JSON.stringify(config.branches));
+        // getViewers(authToken, owner, repository)
+        //   .then(res => JSON.stringify(res))
+        //   .then(res => console.log(res))
+        //   .catch(error => core.setFailed(JSON.stringify(error)));
+        // getCloners(authToken, owner, repository)
+        //   .then(res => JSON.stringify(res))
+        //   .then(res => console.log(res))
+        //   .catch(error => core.setFailed(JSON.stringify(error)));
+        const time = (new Date()).toTimeString();
+        core.setOutput("time", time);
+        //   } catch (error: any) {
+        //     core.setFailed(error.message);
+        //   }
     });
 }
 // getViewers().then(res => console.log(JSON.stringify(res)));
