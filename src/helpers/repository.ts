@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as apiOps from './api';
 import * as trafficOps from './traffic';
-import { template, dataSchema, dataFileName, themes, defaultTheme } from './constants';
+import { template, dataSchema, dataFileName, defaultTheme } from './constants';
+import { default as themes } from './data/themes.json';
 
 export function cloneJSON(jsonObj: any): any {
     return JSON.parse(JSON.stringify(jsonObj));
@@ -168,13 +169,15 @@ export async function pushTemplateBlobContent(
     );
 }
 
+// console.log(themes);
+
 // import { Octokit } from 'octokit';
 // let octokit = new Octokit({ auth: '' });
-// pushTemplateBlobContent(octokit, 'ashutosh1919', 'report-curator', 'report', {
+// pushTemplateBlobContent(octokit, 'ashutosh1919', 'report-curator', 'report', 'rose', {
 //     name: 'report',
 //     commit: {
-//       sha: '0f85fc4aaf05d1857e2c02909573847912a56d2a',
-//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/0f85fc4aaf05d1857e2c02909573847912a56d2a'
+//       sha: 'b26d49ee7766ac5740c3c880742325d6c5f31d43',
+//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/b26d49ee7766ac5740c3c880742325d6c5f31d43'
 //     },
 //     protected: false,
 //     protection: {

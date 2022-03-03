@@ -1,4 +1,3 @@
-export {default as themes} from './data/themes.json';
 export const defaultTheme = "emerald";
 
 // export themes;
