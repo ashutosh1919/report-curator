@@ -138,7 +138,7 @@ export async function pushTemplateBlobContent(
         reportBranchConfig: any): Promise<any> {
     // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
     // console.log(content);
-    // test comment
+    // test comment 1
     console.log(owner, repository);
     let contentTree = await createFileTreeFromTemplate(
         octokit,
