@@ -7,8 +7,12 @@ inputs:
     default: ''
   report_branch:
     description: "Branch to store the report related UI files"
-    required: true
+    required: false
     default: 'report'
+  report_theme:
+    description: "Frontend theme of the generated report"
+    required: false
+    default: 'emerald'
   who-to-greet:  # id of input
     description: 'Who to greet'
     required: true

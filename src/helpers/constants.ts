@@ -1,4 +1,7 @@
+export {default as themes} from './data/themes.json';
+export const defaultTheme = "emerald";
 
+// export themes;
 export const v3Headers = {
     "access-control-allow-origin": "*",
     "accept": "application/vnd.github.v3+json"
@@ -37,6 +40,11 @@ export const templateUrl = "https://raw.githubusercontent.com/ashutosh1919/repor
 
 export const dataFileName = 'data.js';
 export const dataSchema = {
+    theme: {
+        primary: "#059669",
+        secondary: "#34d399",
+        background: "#ecfdf5"
+    },
     views: {
         dates: [
           "11/18", "11/19", "11/20",

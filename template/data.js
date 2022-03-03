@@ -1,4 +1,9 @@
 let data = {
+    theme: {
+      primary: "#059669",
+      secondary: "#34d399",
+      background: "#ecfdf5"
+    },
     views: {
         dates: [
           "11/18", "11/19", "11/20",

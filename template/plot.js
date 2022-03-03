@@ -1,4 +1,13 @@
-function createTrafficPlot(divClass, plotTitle, xlabel, xDates, yLabel, yCount, yUniques, legendCount, legendUniques){
+function createTrafficPlot(divClass,
+                           plotTitle,
+                           xlabel,
+                           xDates,
+                           yLabel,
+                           yCount,
+                           yUniques,
+                           legendCount,
+                           legendUniques,
+                           theme){
 
     var icon = {
         name: 'Download',
@@ -19,7 +28,7 @@ function createTrafficPlot(divClass, plotTitle, xlabel, xDates, yLabel, yCount, 
         type: 'scatter',
         name: legendCount,
         marker: {
-            color: "#059669"
+            color: theme.primary
         }
     };
 
@@ -32,7 +41,7 @@ function createTrafficPlot(divClass, plotTitle, xlabel, xDates, yLabel, yCount, 
         type: 'scatter',
         name: legendUniques,
         marker: {
-            color: "#a7f3d0"
+            color: theme.secondary
         }
     };
 
@@ -42,19 +51,19 @@ function createTrafficPlot(divClass, plotTitle, xlabel, xDates, yLabel, yCount, 
           text: plotTitle,
           font: {
             size: 20,
-            color: "#059669",
+            color: theme.primary,
             family: "Atkinson Hyperlegible Bold"
           }
       },
       font: {
         size: 12,
-        color: "#059669",
+        color: theme.primary,
         family: "Atkinson Hyperlegible Regular"
       },
       autosize: true,
       margin: { l: 50, r:50 },
-      plot_bgcolor: "#ecfdf5",
-      paper_bgcolor: "#ecfdf5",
+      plot_bgcolor: theme.background,
+      paper_bgcolor: theme.background,
       showlegend: false,
       xaxis: {
         title: xlabel
@@ -98,7 +107,8 @@ function onLoad() {
         data.views.count,
         data.views.uniques,
         'Views',
-        'Unique Visitors'
+        'Unique Visitors',
+        data.theme
     );
     createTrafficPlot(
         'traffic-clones',
@@ -109,6 +119,7 @@ function onLoad() {
         data.clones.count,
         data.clones.uniques,
         'Clones',
-        'Unique Cloners'
+        'Unique Cloners',
+        data.theme
     );
 }

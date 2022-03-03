@@ -13,6 +13,7 @@ async function curate(){
         const nameToGreet: string = core.getInput('who-to-greet');
         const authToken: string = core.getInput('auth_token');
         const reportBranch: string = core.getInput('report_branch');
+        const reportTheme: string = core.getInput('report_theme').toLowerCase();
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
@@ -51,6 +52,7 @@ async function curate(){
             owner,
             repository,
             reportBranch,
+            reportTheme,
             reportBranchConfig
         );
         // let blobResponse: any = await apiOps.createFileBlobV3(

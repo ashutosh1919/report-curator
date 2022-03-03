@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as apiOps from './api';
 import * as trafficOps from './traffic';
-import { template, dataSchema, dataFileName } from './constants';
+import { template, dataSchema, dataFileName, themes, defaultTheme } from './constants';
 
 export function cloneJSON(jsonObj: any): any {
     return JSON.parse(JSON.stringify(jsonObj));
@@ -67,6 +67,7 @@ async function generateDataBlobFromSchema(
         octokit: any,
         owner: string,
         repository: string,
+        reportTheme: string,
         mode: string = '100644',
         type: string = 'blob'): Promise<any> {
     let viewsData = await trafficOps.getViewers(
@@ -80,6 +81,10 @@ async function generateDataBlobFromSchema(
         repository
     );
     let data: any = JSON.parse(JSON.stringify(dataSchema));
+    if(!(reportTheme in themes)) {
+        reportTheme = defaultTheme;
+    }
+    data["theme"] = themes[reportTheme];
     data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
     data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
     let content: any = `let data = ${JSON.stringify(data)};`
@@ -94,7 +99,8 @@ async function generateDataBlobFromSchema(
 async function createFileTreeFromTemplate(
         octokit: any,
         owner: string,
-        repository: string): Promise<any> {
+        repository: string,
+        reportTheme: string): Promise<any> {
     let tree: any = [];
 
     for(let i = 0; i < template.html.length; i++){
@@ -114,7 +120,8 @@ async function createFileTreeFromTemplate(
         await generateDataBlobFromSchema(
             octokit,
             owner,
-            repository
+            repository,
+            reportTheme
         )
     );
     return tree
@@ -125,6 +132,7 @@ export async function pushTemplateBlobContent(
         owner: string,
         repository: string,
         reportBranch: string,
+        reportTheme: string,
         reportBranchConfig: any): Promise<any> {
     // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
     // console.log(content);
@@ -132,7 +140,8 @@ export async function pushTemplateBlobContent(
     let contentTree = await createFileTreeFromTemplate(
         octokit,
         owner,
-        repository
+        repository,
+        reportTheme
     );
     let fileTree: any = await apiOps.createFileTreeV3(
         octokit,
