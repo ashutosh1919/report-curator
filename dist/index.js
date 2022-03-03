@@ -615,52 +615,53 @@ const apiOps = __importStar(__nccwpck_require__(1035));
 // import { getViewers, getCloners } from './helpers/traffic';
 function curate() {
     return __awaiter(this, void 0, void 0, function* () {
-        // try {
-        // `who-to-greet` input defined in action metadata file
-        const nameToGreet = core.getInput('who-to-greet');
-        const authToken = core.getInput('auth_token');
-        const reportBranch = core.getInput('report_branch');
-        const reportTheme = core.getInput('report_theme').toLowerCase();
-        (0, logger_1.logInput)(`Theme selected: ${reportTheme}`);
-        // Get the JSON webhook payload for the event that triggered the workflow
-        const payload = JSON.stringify(github.context.payload, undefined, 2);
-        const payloadObj = JSON.parse(payload);
-        // console.log(`The event payload: ${payload}`);
-        const repository = payloadObj['repository']['name'];
-        const owner = payloadObj['repository']['owner']['name'];
-        let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-        let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
-        let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
-        console.log(`Report config: ${reportBranchConfig}`);
-        if (Object.keys(reportBranchConfig).length === 0) {
-            let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
-            config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
-            console.log(`config: ${config}`);
-            reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+        try {
+            // `who-to-greet` input defined in action metadata file
+            const nameToGreet = core.getInput('who-to-greet');
+            const authToken = core.getInput('auth_token');
+            const reportBranch = core.getInput('report_branch');
+            const reportTheme = core.getInput('report_theme').toLowerCase();
+            (0, logger_1.logInput)(`Theme selected: ${reportTheme}`);
+            // Get the JSON webhook payload for the event that triggered the workflow
+            const payload = JSON.stringify(github.context.payload, undefined, 2);
+            const payloadObj = JSON.parse(payload);
+            // console.log(`The event payload: ${payload}`);
+            const repository = payloadObj['repository']['name'];
+            const owner = payloadObj['repository']['owner']['name'];
+            let config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+            let defaultBranchConfig = yield repOps.getBranchConfig(config.branches, config.branch);
+            let reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+            console.log(`Report config: ${reportBranchConfig}`);
+            if (Object.keys(reportBranchConfig).length === 0) {
+                let res = yield apiOps.createBranchRefV3(config.octokit, owner, repository, reportBranch, defaultBranchConfig["commit"]["sha"]);
+                config = yield (0, secrets_1.getActionSecrets)(authToken, payloadObj);
+                console.log(`config: ${config}`);
+                reportBranchConfig = yield repOps.getBranchConfig(config.branches, reportBranch);
+            }
+            console.log(reportBranchConfig);
+            // let templateContent: string = getReportTemplateContent()
+            let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportTheme, reportBranchConfig);
+            // let blobResponse: any = await apiOps.createFileBlobV3(
+            //     config.octokit,
+            //     owner,
+            //     repository,
+            //     templateContent
+            // );
+            // console.log(JSON.stringify(config.branches));
+            // getViewers(authToken, owner, repository)
+            //   .then(res => JSON.stringify(res))
+            //   .then(res => console.log(res))
+            //   .catch(error => core.setFailed(JSON.stringify(error)));
+            // getCloners(authToken, owner, repository)
+            //   .then(res => JSON.stringify(res))
+            //   .then(res => console.log(res))
+            //   .catch(error => core.setFailed(JSON.stringify(error)));
+            const time = (new Date()).toTimeString();
+            core.setOutput("time", time);
         }
-        console.log(reportBranchConfig);
-        // let templateContent: string = getReportTemplateContent()
-        let pushedBlobRes = yield repOps.pushTemplateBlobContent(config.octokit, owner, repository, reportBranch, reportTheme, reportBranchConfig);
-        // let blobResponse: any = await apiOps.createFileBlobV3(
-        //     config.octokit,
-        //     owner,
-        //     repository,
-        //     templateContent
-        // );
-        // console.log(JSON.stringify(config.branches));
-        // getViewers(authToken, owner, repository)
-        //   .then(res => JSON.stringify(res))
-        //   .then(res => console.log(res))
-        //   .catch(error => core.setFailed(JSON.stringify(error)));
-        // getCloners(authToken, owner, repository)
-        //   .then(res => JSON.stringify(res))
-        //   .then(res => console.log(res))
-        //   .catch(error => core.setFailed(JSON.stringify(error)));
-        const time = (new Date()).toTimeString();
-        core.setOutput("time", time);
-        //   } catch (error: any) {
-        //     core.setFailed(error.message);
-        //   }
+        catch (error) {
+            core.setFailed(error.message);
+        }
     });
 }
 // getViewers().then(res => console.log(JSON.stringify(res)));

@@ -9,7 +9,7 @@ import * as apiOps from './helpers/api';
 // import { getViewers, getCloners } from './helpers/traffic';
 
 async function curate(){
-    // try {
+    try {
         // `who-to-greet` input defined in action metadata file
         const nameToGreet: string = core.getInput('who-to-greet');
         const authToken: string = core.getInput('auth_token');
@@ -78,9 +78,9 @@ async function curate(){
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
-    //   } catch (error: any) {
-    //     core.setFailed(error.message);
-    //   }
+      } catch (error: any) {
+        core.setFailed(error.message);
+      }
       
 }
 
