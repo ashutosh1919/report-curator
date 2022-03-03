@@ -14,6 +14,7 @@ async function curate(){
         const authToken: string = core.getInput('auth_token');
         const reportBranch: string = core.getInput('report_branch');
         const reportTheme: string = core.getInput('report_theme').toLowerCase();
+        console.log("Theme selected:", reportTheme);
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
