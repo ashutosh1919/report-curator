@@ -8,13 +8,13 @@ import * as apiOps from './helpers/api';
 // import { getViewers, getCloners } from './helpers/traffic';
 
 async function curate(){
-    try {
+    // try {
         // `who-to-greet` input defined in action metadata file
         const nameToGreet: string = core.getInput('who-to-greet');
         const authToken: string = core.getInput('auth_token');
         const reportBranch: string = core.getInput('report_branch');
         const reportTheme: string = core.getInput('report_theme').toLowerCase();
-        console.log("Theme selected:", reportTheme);
+        console.log(`Theme selected: ${reportTheme}`);
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
@@ -77,9 +77,9 @@ async function curate(){
 
         const time = (new Date()).toTimeString();
         core.setOutput("time", time);
-      } catch (error: any) {
-        core.setFailed(error.message);
-      }
+    //   } catch (error: any) {
+    //     core.setFailed(error.message);
+    //   }
       
 }
 

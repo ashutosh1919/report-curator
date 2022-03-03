@@ -146,14 +146,14 @@ export async function pushTemplateBlobContent(
         repository,
         reportTheme
     );
-    console.log("Creating tree from template succeeded.");
+    console.log(`Creating tree from template succeeded.`);
     let fileTree: any = await apiOps.createFileTreeV3(
         octokit,
         owner,
         repository,
         contentTree
     );
-    console.log("Storing file tree succeeded.");
+    console.log(`Storing file tree succeeded.`);
     let commitFile = await apiOps.createCommitV3(
         octokit,
         owner,
@@ -162,7 +162,7 @@ export async function pushTemplateBlobContent(
         fileTree.data.sha,
         [reportBranchConfig.commit.sha]
     );
-    console.log("Creating commit succeeded.");
+    console.log(`Creating commit succeeded.`);
     return await apiOps.updateReferenceV3(
         octokit,
         owner,
