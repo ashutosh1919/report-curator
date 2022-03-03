@@ -3,6 +3,7 @@ import * as exec from '@actions/exec';
 import * as github from '@actions/github';
 
 import { getActionSecrets } from './helpers/secrets';
+import { logInput } from './helpers/logger';
 import * as repOps from './helpers/repository';
 import * as apiOps from './helpers/api';
 // import { getViewers, getCloners } from './helpers/traffic';
@@ -14,7 +15,7 @@ async function curate(){
         const authToken: string = core.getInput('auth_token');
         const reportBranch: string = core.getInput('report_branch');
         const reportTheme: string = core.getInput('report_theme').toLowerCase();
-        console.log(`Theme selected: ${reportTheme}`);
+        logInput(`Theme selected: ${reportTheme}`);
 
         // Get the JSON webhook payload for the event that triggered the workflow
         const payload: string = JSON.stringify(github.context.payload, undefined, 2)
