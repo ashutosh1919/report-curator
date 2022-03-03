@@ -145,12 +145,14 @@ export async function pushTemplateBlobContent(
         repository,
         reportTheme
     );
+    console.log("Creating tree from template succeeded.");
     let fileTree: any = await apiOps.createFileTreeV3(
         octokit,
         owner,
         repository,
         contentTree
     );
+    console.log("Storing file tree succeeded.");
     let commitFile = await apiOps.createCommitV3(
         octokit,
         owner,
@@ -159,6 +161,7 @@ export async function pushTemplateBlobContent(
         fileTree.data.sha,
         [reportBranchConfig.commit.sha]
     );
+    console.log("Creating commit succeeded.");
     return await apiOps.updateReferenceV3(
         octokit,
         owner,
@@ -176,8 +179,8 @@ export async function pushTemplateBlobContent(
 // pushTemplateBlobContent(octokit, 'ashutosh1919', 'report-curator', 'report', 'rose', {
 //     name: 'report',
 //     commit: {
-//       sha: 'b26d49ee7766ac5740c3c880742325d6c5f31d43',
-//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/b26d49ee7766ac5740c3c880742325d6c5f31d43'
+//       sha: '5dffe72bee501842366c662aab06896266e8e465',
+//       url: 'https://api.github.com/repos/ashutosh1919/report-curator/commits/5dffe72bee501842366c662aab06896266e8e465'
 //     },
 //     protected: false,
 //     protection: {
