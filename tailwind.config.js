@@ -3,5 +3,5 @@ tailwind.config = {
         container: {
           center: true,
         }
-    }    
+    }
 }
