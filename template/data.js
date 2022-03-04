@@ -1,9 +1,10 @@
 let data = {
-    theme: {
-      primary: "#059669",
-      secondary: "#34d399",
-      background: "#ecfdf5"
-    },
+  "theme": {
+    "name": "rose",
+    "primary": "#e11d48",
+    "secondary": "#fb7185",
+    "background": "#fff1f2"
+},
     views: {
         dates: [
           "11/18", "11/19", "11/20",

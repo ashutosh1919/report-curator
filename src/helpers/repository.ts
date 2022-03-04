@@ -86,6 +86,7 @@ async function generateDataBlobFromSchema(
         reportTheme = defaultTheme;
     }
     data["theme"] = themes[reportTheme];
+    data["theme"]["name"] = reportTheme;
     data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
     data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
     let content: any = `let data = ${JSON.stringify(data)};`

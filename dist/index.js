@@ -386,6 +386,7 @@ function generateDataBlobFromSchema(octokit, owner, repository, reportTheme, mod
             reportTheme = constants_1.defaultTheme;
         }
         data["theme"] = themes_json_1.default[reportTheme];
+        data["theme"]["name"] = reportTheme;
         data["views"] = convertTimeStampDataToPlotData(viewsData["data"]["views"]);
         data["clones"] = convertTimeStampDataToPlotData(clonesData["data"]["clones"]);
         let content = `let data = ${JSON.stringify(data)};`;
@@ -421,7 +422,7 @@ function pushTemplateBlobContent(octokit, owner, repository, reportBranch, repor
     return __awaiter(this, void 0, void 0, function* () {
         // let content: string = await apiOps.getTemplateFileText(); // getReportTemplateContent();
         // console.log(content);
-        // test comment
+        // test comment 1
         console.log(owner, repository);
         let contentTree = yield createFileTreeFromTemplate(octokit, owner, repository, reportTheme);
         console.log(`Creating tree from template succeeded.`);
